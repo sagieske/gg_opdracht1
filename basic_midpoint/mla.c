@@ -33,26 +33,35 @@
  *
  *
  */
-void mla(SDL_Surface *s, int x0i, int y0i, int x1i, int y1i, Uint32 colour) {
+void swap(int* a,int* b)
+{
+	int t=*a;
+	*a=*b;
+	*b=t;
+}
+
+void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
   //int ix,iy;
 	
 	double x,y;
+	if(x0 > x1)
+		swap(&x0, &x1);
 
-	double x0 = x0i;
-	double x1 = x1i;
-	double y0 = y0i;
-	double y1 = y1i;
 	PutPixel(s,x0,y0,colour);
 	PutPixel(s,x1,y1,colour);
 
 	y = y0;
+
 	for (x = x0; x<x1; ++x)
 	{
 		PutPixel(s,x,y,colour);
-		if (((y0-y1)*(x+1)+(x1-x0)*(y-0.5)+x0*y1-x1*y0) > 0)
+		double d = ((double)((y0-y1)*(x+1))+(double)(x1-x0)*(y-0.5)+(double)(x0*y1)-(double)(x1*y0));
+		if (d > 0)
 			y--;
 		
 	}
 	return;
 }
+
+
 
