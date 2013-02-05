@@ -41,11 +41,18 @@ void swap(int* a,int* b)
 }
 
 void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
-  //int ix,iy;
+    //int ix,iy;
 	
 	double x,y;
-	if(x0 > x1)
+	//double dx, dy;
+		
+	//dx = (double)(x0)/(double)(x1);
+	//dy = (double)(y0)/(double)(y1);
+
+	if(x0 > x1 && y0 < y1){
 		swap(&x0, &x1);
+		swap(&y0, &y1);
+	}
 
 	PutPixel(s,x0,y0,colour);
 	PutPixel(s,x1,y1,colour);
