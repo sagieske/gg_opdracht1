@@ -4,10 +4,10 @@
  * Description ..... Midpoint Line Algorithm
  * Created by ...... Jurgen Sturm 
  *
- * Student name ....
- * Student email ... 
- * Collegekaart ....
- * Date ............
+ * Student name .... Sharon Gieske & Ysbrand Galama
+ * Student email ... sharongieske@gmail.com & y.galama@hotmail.com
+ * Collegekaart .... 6167667 & 10262067
+ * Date ............ 8/02/2013
  * Comments ........
  *
  *
@@ -33,12 +33,18 @@
  *
  *
  */
+
+/* Swap function to swap a and b using pointers. Function used for integers.
+*/
 void swap_int(int* a,int* b)
 {
 	int t=*a;
 	*a=*b;
 	*b=t;
 }
+
+/* Swap function to swap a and b using pointers. Function used for doubles.
+*/
 void swap_double(double* a,double* b)
 {
 	double t=*a;
@@ -47,40 +53,101 @@ void swap_double(double* a,double* b)
 }
 
 void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
-    //int ix,iy;
-	
+	int dx,dy,d,incry,incre,incrne,slopegt1=0;
+	dx=abs(x0-x1);dy=abs(y0-y1);
+	if(dy>dx)
+	{
+		swap(&x0,&y0);
+		swap(&x1,&y1);
+		swap(&dx,&dy);
+		slopegt1=1;
+	}
+	if(x0>x1)
+	{
+		swap(&x0,&x0);
+		swap(&y0,&y1);
+	}
+	if(y0>y1)
+		incry=-1;
+	else
+		incry=1;
+	d=2*dy-dx;
+	incre=2*dy;
+	incrne=2*(dy-dx);
+	while(x0<x1)
+	{
+		if(d<=0)
+			d+=incre;
+		else
+		{
+			d+=incrne;
+			y1+=incry;
+		}
+		x1++;
+		if(slopegt1)
+			putpixel(y0,x0,colour);
+		else
+			putpixel(x0,y0,colour);
+	}	
+	/*
 	double x,y;
 	double dx, dy;
 	double diff; 
-	double test = (x1-x0)-(y1-y0);
-	printf("(x1-x0)-(y1-y0) = (%d-%d)-(%d-%d) = %f\n",x1,x0, y1,y0, test);
-	
+	double sign;
 
+	// if x0 higher than x1, swap points
 	if(x0 > x1){
 		swap_int(&x0, &x1);
 		swap_int(&y0, &y1);
 	}
 
-
-
+	// Difference between points in x and y direction
 	dx = x1 - x0;
 	dy = y1 - y0;
+
+	// Slope
 	diff = dy/dx;
+
+	// set sign
+	sign = 1;
+
+	// Color end points of line
 	PutPixel(s,x0,y0,colour);
 	PutPixel(s,x1,y1,colour);
+	
+	// slope between -1 and inf
+	if( (-1 <= diff && diff < 0) ||  (diff >= 0 && diff < 1 ) || (diff >=1)) {
+		// flip over x-as		
+		if (diff >= 1){
+			swap_double(&x,&y);
+			swap_int(&x0, &y0);
+			swap_int(&x1, &y1);
+			sign = -1;
+		}	
 
-	if( -1 <= diff && diff < 0) {
-		printf("m = [-1,0]\n");
+		// take steps from x0,y0 to x1,y1				
 		y = y0;
 		for (x = x0; x<x1; ++x)
 		{
-			PutPixel(s,x,y,colour);
-			double d = ((double)((y0-y1)*(x-1))+(double)(x1-x0)*(y+0.5)+(double)(x0*y1)-(double)(x1*y0));
+			// flip sign when 0 <= slope < 1
+			if(diff >= 0 && diff < 1 )
+				sign = -1;
+
+			// flip x, y coordinates for pixel drawing since x,y coordinates were swapt for formula
+			if( diff >= 1)
+				PutPixel(s,y,x,colour);
+			else
+				PutPixel(s,x,y,colour);
+
+			double d = sign*((double)((y0-y1)*(x-1))+(double)(x1-x0)*(y+0.5)+(double)(x0*y1)-(double)(x1*y0));
 			if (d > 0)
-				y--;
+				y -= sign;
+			if (d < 0 && diff > 1 )
+				y += sign;
 		}
-	} else if (diff < -1){
-		printf("m = [-1, inf]\n");
+	} 	
+	//	slope between -inf and -1
+	else {
 		x = x0;
 		for (y = y0; y>y1; --y)
 		{
@@ -88,63 +155,9 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 			double d = ((double)((y0-y1)*(x-0.5))+(double)(x1-x0)*(y-1)+(double)(x0*y1)-(double)(x1*y0));
 			if (d < 0)
 				x++;
-		
 		}
-	} else if ( diff >= 0 && diff < 1 ) {
-		printf("m = [1,0]\n");
-		y = y0;
-		for (x = x0; x<x1; ++x)
-		{
-			PutPixel(s,x,y,colour);
-			double d = ((double)(-(y0-y1)*(x-1))-(double)(x1-x0)*(y-0.5)-(double)(x0*y1)+(double)(x1*y0));
-			if (d > 0)
-				y++;
-		}
-	} else { 
-		printf("m = [1,inf]\n");
-		x = x0;
-		for (y = y0; y<y1; ++y)
-		{
-			PutPixel(s,x,y,colour);
-			double d = ((double)(-(y0-y1)*(x+1))-(double)(x1-x0)*(y+0.5)-(double)(x0*y1)+(double)(x1*y0));
-			if (d < 0)
-				x++;
-		
-		}	
-	}
-
-return;
-
-
-
-
-
-
-
-
-/*
-
-	if (abs(dy) > abs(dx)) {
-	x = x0;
-		for (y = y0; y>y1; --y)
-		{
-			PutPixel(s,x,y,colour);
-			double d = ((double)((y0-y1)*(x+0.5))+(double)(x1-x0)*(y-1)+(double)(x0*y1)-(double)(x1*y0));
-			if (d < 0)
-				x++;
-		
-		}
-	} else {
-		y = y0;
-		for (x = x0; x<x1; ++x)
-		{
-			PutPixel(s,x,y,colour);
-			double d = ((double)((y0-y1)*(x-1))+(double)(x1-x0)*(y+0.5)+(double)(x0*y1)-(double)(x1*y0));
-			if (d > 0)
-				y--;
-		}
-	}
-		return;*/
+	} */
+	return;
 }
 
 
