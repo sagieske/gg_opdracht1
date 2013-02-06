@@ -52,24 +52,25 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 	double x,y;
 	double dx, dy;
 	double diff; 
+	double test = (x1-x0)-(y1-y0);
+	printf("(x1-x0)-(y1-y0) = (%d-%d)-(%d-%d) = %f\n",x1,x0, y1,y0, test);
 	
-	dx = x1 - x0;
-	dy = y1- y0;
-	diff = dx/dy;
-	printf("diff : %f\n", diff);
 
-
-	printf("dx %f, dy %f", dx, dy);
-
-	if(x0 > x1 && y0 < y1){
+	if(x0 > x1){
 		swap_int(&x0, &x1);
 		swap_int(&y0, &y1);
 	}
 
+
+
+	dx = x1 - x0;
+	dy = y1 - y0;
+	diff = dy/dx;
 	PutPixel(s,x0,y0,colour);
 	PutPixel(s,x1,y1,colour);
 
-	if( diff >= 0 && diff <= 1) {
+	if( -1 <= diff && diff < 0) {
+		printf("m = [-1,0]\n");
 		y = y0;
 		for (x = x0; x<x1; ++x)
 		{
@@ -78,18 +79,19 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 			if (d > 0)
 				y--;
 		}
-	} else if (diff > 1){
+	} else if (diff < -1){
+		printf("m = [-1, inf]\n");
 		x = x0;
 		for (y = y0; y>y1; --y)
 		{
 			PutPixel(s,x,y,colour);
-			double d = ((double)((y0-y1)*(x+0.5))+(double)(x1-x0)*(y-1)+(double)(x0*y1)-(double)(x1*y0));
+			double d = ((double)((y0-y1)*(x-0.5))+(double)(x1-x0)*(y-1)+(double)(x0*y1)-(double)(x1*y0));
 			if (d < 0)
 				x++;
 		
 		}
-	} else if ( diff < 0 && diff > -1 ) {
-		printf("rc is [0,-1]");
+	} else if ( diff >= 0 && diff < 1 ) {
+		printf("m = [1,0]\n");
 		y = y0;
 		for (x = x0; x<x1; ++x)
 		{
@@ -99,9 +101,19 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 				y++;
 		}
 	} else { 
-		printf("rc is [-1,-inf]");	
+		printf("m = [1,inf]\n");
+		x = x0;
+		for (y = y0; y<y1; ++y)
+		{
+			PutPixel(s,x,y,colour);
+			double d = ((double)(-(y0-y1)*(x+1))-(double)(x1-x0)*(y+0.5)-(double)(x0*y1)+(double)(x1*y0));
+			if (d < 0)
+				x++;
+		
+		}	
 	}
 
+return;
 
 
 
@@ -110,8 +122,7 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 
 
 
-
-
+/*
 
 	if (abs(dy) > abs(dx)) {
 	x = x0;
@@ -133,7 +144,7 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 				y--;
 		}
 	}
-		return;
+		return;*/
 }
 
 

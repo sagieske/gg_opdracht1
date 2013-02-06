@@ -92,13 +92,15 @@ void DrawFigure(SDL_Surface *screen) {
   }
 
     colour=SDL_MapRGB(screen->format,0xFF,0,0);
-	
-	//mla(screen, 100, 100, 200, 90, colour);
+
+	mla(screen, 100,100, 150,120, colour);
+	mla(screen, 100, 100, 200, 90, colour);
+	/*
 	mla(screen, 200, 90, 100, 100, colour);
 	//mla(screen, 200, 40, 100, 100, colour);
 	mla(screen, 120, 40, 100, 100, colour);
 	mla(screen, 20, 40, 100, 100, colour);
-	mla(screen, 20, 190, 100, 100, colour);
+	mla(screen, 20, 190, 100, 100, colour);*/
   /* It would be more efficient to call SDL_UpdateRect(), but I do not really
    * care.
    */
