@@ -55,7 +55,7 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 	
 	dx = x1 - x0;
 	dy = y1- y0;
-	diff = dx-dy;
+	diff = dx/dy;
 	printf("diff : %f\n", diff);
 
 
@@ -68,6 +68,49 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 
 	PutPixel(s,x0,y0,colour);
 	PutPixel(s,x1,y1,colour);
+
+	if( diff >= 0 && diff <= 1) {
+		y = y0;
+		for (x = x0; x<x1; ++x)
+		{
+			PutPixel(s,x,y,colour);
+			double d = ((double)((y0-y1)*(x-1))+(double)(x1-x0)*(y+0.5)+(double)(x0*y1)-(double)(x1*y0));
+			if (d > 0)
+				y--;
+		}
+	} else if (diff > 1){
+		x = x0;
+		for (y = y0; y>y1; --y)
+		{
+			PutPixel(s,x,y,colour);
+			double d = ((double)((y0-y1)*(x+0.5))+(double)(x1-x0)*(y-1)+(double)(x0*y1)-(double)(x1*y0));
+			if (d < 0)
+				x++;
+		
+		}
+	} else if ( diff < 0 && diff > -1 ) {
+		printf("rc is [0,-1]");
+		y = y0;
+		for (x = x0; x<x1; ++x)
+		{
+			PutPixel(s,x,y,colour);
+			double d = ((double)(-(y0-y1)*(x-1))-(double)(x1-x0)*(y-0.5)-(double)(x0*y1)+(double)(x1*y0));
+			if (d > 0)
+				y++;
+		}
+	} else { 
+		printf("rc is [-1,-inf]");	
+	}
+
+
+
+
+
+
+
+
+
+
 
 
 	if (abs(dy) > abs(dx)) {
