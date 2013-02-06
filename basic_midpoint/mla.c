@@ -52,35 +52,33 @@ void swap_double(double* a,double* b)
 	*b=t;
 }
 
+/* Midpoint Line Algorithm to draw line between (x0, y0) and (x1, y1)
+*/
 void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 	double x,y;
 	double dx, dy;
 	double diff; 
 	double sign;
 
-	// if x0 higher than x1, swap points
+	// swap points to mirror lines on y-axis
 	if(x0 > x1){
 		swap_int(&x0, &x1);
 		swap_int(&y0, &y1);
 	}
 
-	// Difference between points in x and y direction
 	dx = x1 - x0;
 	dy = y1 - y0;
+	diff = dy/dx;	// slope
 
-	// Slope
-	diff = dy/dx;
+	sign = 1;		// set sign for later formula
 
-	// set sign
-	sign = 1;
-
-	// Color end points of line
+	// Color end points of line, are fixed given as function parameters
 	PutPixel(s,x0,y0,colour);
 	PutPixel(s,x1,y1,colour);
 	
 	// slope between -1 and inf
 	if( (-1 <= diff && diff < 0) ||  (diff >= 0 && diff < 1 ) || (diff >=1)) {
-		// flip over x-as		
+		// flip over x-axis		
 		if (diff >= 1){
 			swap_double(&x,&y);
 			swap_int(&x0, &y0);
@@ -88,7 +86,7 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 			sign = -1;
 		}	
 
-		// take steps from x0,y0 to x1,y1				
+		// take steps over y-axis				
 		y = y0;
 		for (x = x0; x<x1; ++x)
 		{
@@ -102,7 +100,10 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 			else
 				PutPixel(s,x,y,colour);
 
-			double d = sign*((double)((y0-y1)*(x-1))+(double)(x1-x0)*(y+0.5)+(double)(x0*y1)-(double)(x1*y0));
+			// Midpoint calculation
+			double d = sign*((double)((y0-y1)*(x-1))+(double)(x1-x0)*(y+0.5)+(double)(x0*y1)-(double)(x1*y0));	
+
+			// Compare line to midpoint and determine direction of next coordinate
 			if (d > 0)
 				y -= sign;
 			if (d < 0 && diff > 1 )
