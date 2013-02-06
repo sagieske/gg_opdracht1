@@ -34,6 +34,8 @@ draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2,
 	PutPixel(x1, y1, r, g, b);
 	PutPixel(x2, y2, r, g, b);
 
+
+
 }
 
 void
