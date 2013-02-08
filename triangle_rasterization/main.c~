@@ -72,7 +72,7 @@ void PutPixel(int x, int y, byte r, byte g, byte b)
 	if (color_by_putpixel_count ==1){
 
 		// More than one PutPixel operation:
-		if( framebuffer[3*(framebuffer_width*y+x)] == 0) {
+		if( framebuffer[3*(framebuffer_width*y+x)] != 0) {
 			framebuffer[3*(framebuffer_width*y+x)] = 128;
 		} 
 		// Only one PutPixel operation:
