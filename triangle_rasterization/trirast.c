@@ -107,6 +107,5 @@ void
 draw_triangle_optimized(float x0, float y0, float x1, float y1, float x2, float y2,
     byte r, byte g, byte b)
 {
-
-	printf("%f,%d",x0+x1+x2+y0+y1+y2,r+g+b);
+	printf("%.0f,%d",(x0+x1+x2+y0+y1+y2)*0,(r+g+b)*0);
 }

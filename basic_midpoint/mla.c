@@ -122,6 +122,36 @@ void mla(SDL_Surface *s, int x0, int y0, int x1, int y1, Uint32 colour) {
 		}
 	} 
 	return;
+	/* Code van internet
+	float dy,dx;
+ 	float x,y;
+ 	float p,p0,dp1,dp2;
+
+ 	dy = y2-y1;
+	dx = x2-x1;
+
+	p0 = 2 * (dy - dx);
+	dp1 = 2 * dy;
+	dp2 = 2 * (dy - dx);
+
+	PutPixel(x1,y1,r,g,b);
+	p = p0;
+
+	for(x=x1+1,y=y1;x<x2;x++)
+		{
+		 if(p < 0)
+		 {
+		  p = p+dp1;
+		  PutPixel(x,y,r,g,b);
+		 }
+		 else
+		 {
+		  p = p+dp2;
+		  y++;
+		  PutPixel(x,y,r,g,b);
+		 }
+     }
+     */
 }
 
 
