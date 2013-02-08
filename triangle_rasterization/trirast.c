@@ -88,8 +88,8 @@ draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2,
 			beta  = ( (y2 - y0)*x+(x0-x2)*y+x2*y0-y2*x0 ) / f20;
 			gamma = ( (y0 - y1)*x+(x1-x0)*y+x0*y1-x1*y0 ) / f01;
 			alpha = 1 - beta - gamma;
-			//if (0<=alpha && alpha<=1 && 0<=beta && beta<=1 && 0<=gamma && gamma<=1)
-			//PutPixel(x,y,r,g,b);
+//			if (0<=alpha && alpha<=1 && 0<=beta && beta<=1 && 0<=gamma && gamma<=1)
+//				PutPixel(x,y,r,g,b);
 
 			// code from book on pixels sharing edge
 			if (alpha >= 0 && beta >= 0 && gamma >= 0){
@@ -97,7 +97,6 @@ draw_triangle(float x0, float y0, float x1, float y1, float x2, float y2,
 					PutPixel(x,y,r,g,b);
 				}
 			}			
-
 		}
 	}
 	
@@ -107,5 +106,55 @@ void
 draw_triangle_optimized(float x0, float y0, float x1, float y1, float x2, float y2,
     byte r, byte g, byte b)
 {
-	printf("%.0f,%d",(x0+x1+x2+y0+y1+y2)*0,(r+g+b)*0);
+	float xmin,xmax,ymin,ymax;
+	float f20,f01, f12;
+	float alpha,beta,gamma;
+	float x,y;
+	float off_f12, off_f20, off_f01;
+	float x02,x10,y20,y01;
+	
+	xmin = min(x0,x1,x2);
+	xmax = max(x0,x1,x2);
+	ymin = min(y0,y1,y2);
+	ymax = max(y0,y1,y2);
+	
+	f20 = formula(x2,y2, x0, y0, x1, y1);
+	f01 = formula(x0,y0, x1, y1, x2, y2);
+	f12 = formula(x1,y1, x2, y2, x0, y0);
+	
+	x02 = (x0-x2)/f20;
+	x10 = (x1-x0)/f01;
+	y20 = (y2-y0)/f20;
+	y01 = (y0-y1)/f01;
+
+	// calculations for offscreen point
+ 	off_f12 = formula(x1,y1, x2, y2, off_x, off_y);
+	off_f20 = formula(x2,y2, x0, y0, off_x, off_y);
+	off_f01 = formula(x0,y0, x1, y1, off_x, off_y);
+	
+	beta  = ( (y2 - y0)*xmin+(x0-x2)*ymin+x2*y0-y2*x0 ) / f20;
+	gamma =	( (y0 - y1)*xmin+(x1-x0)*ymin+x0*y1-x1*y0 ) / f01;
+	alpha = 1-beta-gamma;
+	
+	for (x = xmin; x < xmax; ++x)
+	{	
+		for (y = ymin; y < ymax; ++y)
+		{
+//			if (0<=alpha && alpha<=1 && 0<=beta && beta<=1 && 0<=gamma && gamma<=1)
+//				PutPixel(x,y,r,g,b);
+			
+			// code from book on pixels sharing edge
+			if (alpha >= 0 && beta >= 0 && gamma >= 0){
+				if((alpha > 0 || (f12*off_f12) > 0) && (beta > 0 || (f20*off_f20) > 0) && (gamma > 0 || (f01*off_f01) > 0)){
+					PutPixel(x,y,r,g,b);
+				}
+			}
+			beta  += x02;
+			gamma += x10;
+			alpha = 1 - beta - gamma;		
+		}
+		beta  += y20 -(ymax-ymin)*x02;
+		gamma += y01 -(ymax-ymin)*x10;
+		alpha = 1 - beta - gamma;
+	}
 }

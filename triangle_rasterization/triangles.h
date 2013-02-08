@@ -32,13 +32,13 @@ struct vertex  vertices[] =
 struct triangle triangles[] =
 {
     // i, j, k,  c
-    //{ 0, 1, 2,  0 },
-    //{ 1, 2, 3,  1 },
-    //{ 3, 4, 5,  2 },
+    {0, 1, 2,  0 }, //bijna
+    { 1, 2, 3,  1 }, //yes
+    { 3, 4, 5,  2 }, //bijna
 
-    //{ 4, 5, 6,  0 },
-    { 5, 7, 6,  1 },
+    { 4, 5, 6,  0 }, //bijna
+    { 5, 7, 6,  1 }, //heel close
 
-    //{ 8, 9, 10, 2 },
-    //{ 10, 9, 11, 1 },
+    { 8, 9, 10, 2 }, //twee randen kloppen niet
+    { 10, 9, 11, 1 }, //heel close
 };
