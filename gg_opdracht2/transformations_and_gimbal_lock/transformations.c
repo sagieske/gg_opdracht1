@@ -83,6 +83,19 @@ void cross(GLfloat *ans, GLfloat u[3], GLfloat v[3])
 	ans[2] = u[0]*v[1]-u[1]*v[0];
 }
 
+void printVector(GLfloat *vector){
+	printf("Vector: [%f, %f, %f]\n", vector[0],vector[1],vector[2]);  
+}
+/* Function to normalize vector
+*/
+void normalize(GLfloat *vector){
+	GLfloat vec[3] = {vector[0],vector[1],vector[2]};
+ 	GLfloat length =  sqrt(dot(vec, vec));
+	vector[0] = vector[0] / length;
+	vector[1] = vector[1] / length;
+	vector[2] = vector[2] / length;
+}
+
 void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
     GLfloat u[3], v[3], t[3];
@@ -94,28 +107,36 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
  	GLfloat w[3] = {x,y,z};
 
 	// Normalize w
- 	GLfloat length =  sqrt(dot(w,w));
-	w[0] = w[0] / length;
-	w[1] = w[1] / length;
-	w[2] = w[2] / length;
+	normalize(&w[0]);
+	printVector(w);
 
     // Compute the value of t, based on w
 	makeT(&t[0], w);
-	
+
     // Compute u = t x w
-	GLfloat cross_tw[3] = cross(&cross_tw[0], t, w);
- 	GLfloat length_tw =  sqrt(dot(cross_tw,cross_tw));	
-	u[0] = cross_tw[0] / length_tw;
-	u[1] = cross_tw[1] / length_tw;
-	u[2] = cross_tw[2] / length_tw;
+	cross(&u[0], t, w);
 
     // Normalize u
+	normalize(&u[0]);
 
-    // Compute v = w x u
+	// Compute v = w x u
 	cross(&v[0],w,u);
+
     // At this point u, v and w should form an orthonormal basis.
     // If your routine does not seem to work correctly it might be
     // a good idea to the check the vector values.
+	
+	/*	Check is correct
+	GLfloat u_in =  sqrt(dot(u, u));
+	GLfloat v_in =  sqrt(dot(v, v));
+	GLfloat w_in =  sqrt(dot(w, w));
+	GLfloat uv_in =  sqrt(dot(u, v));
+	GLfloat vw_in =  sqrt(dot(v, w));
+	GLfloat wv_in =  sqrt(dot(w, v));
+	// U, V and W calculated correctly. Inproduct with self is 1 
+	printf("Inproduct with other: uv = %f, vw = %f, wv =%f\n", uv_in, vw_in, wv_in);
+	printf("Inproduct with self: u = %f, v = %f, w =%f\n", u_in, v_in, w_in);
+	*/
 
     //
     // 2. Set up the three matrices making up the rotation
