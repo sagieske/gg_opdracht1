@@ -68,18 +68,19 @@ GLfloat *cross(GLfloar u[3], GLfloat v[3])
 
 void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
-    GLfloat u[3], v[3], w[3], t[3];
+    GLfloat u[3], v[3], t[3];
 
     //
     // 1. Create the orthonormal basis
-    //
 
-    GLfloat t1[3] = {1.0,2.0,3.0};
-    GLfloat t2[3] = {3.0,2.0,1.0};
-    GLfloat *t3 = *cross(t1,t2);
-    printf("dot %f, cross (%f,%f,%f)\n",dot(t1,t2),&t3[0],&t3[1],&t3[2]);
+    // Store the incoming rotation axis in w and 
+ 	GLfloat w[3] = {x,y,z};
 
-    // Store the incoming rotation axis in w and normalize w
+	// Normalize w
+ 	GLfloat length =  sqrt(dot(w,w));
+	w[0] = w[0] / length;
+	w[1] = w[1] / length;
+	w[2] = w[2] / length;
 
 	
     // Compute the value of t, based on w
