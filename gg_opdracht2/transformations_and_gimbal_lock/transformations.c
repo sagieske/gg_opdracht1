@@ -50,6 +50,22 @@ void myTranslatef(GLfloat x, GLfloat y, GLfloat z)
     glMultMatrixf(M);
 }
 
+GLfloat dot(GLfloat u[3], GLfloat v[3])
+{
+	GLfloat ans;
+	ans = u[0]*v[0]+u[1]*v[1]+u[2]*v[2];
+	return ans;
+}
+
+GLfloat *cross(GLfloar u[3], GLfloat v[3])
+{
+	GLfloat *ans;
+	&ans[0] = u[1]*v[2]-u[2]*v[1];
+	&ans[1] = u[2]*v[0]-u[0]*v[2];
+	&ans[2] = u[0]*v[1]-u[1]*v[0];
+	return ans;
+}
+
 void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
     GLfloat u[3], v[3], w[3], t[3];
@@ -57,6 +73,12 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
     //
     // 1. Create the orthonormal basis
     //
+
+    GLfloat t1[3] = {1.0,2.0,3.0};
+    GLfloat t2[3] = {3.0,2.0,1.0};
+    GLfloat *t3 = *cross(t1,t2);
+    printf("dot %f, cross (%f,%f,%f)\n",dot(t1,t2),&t3[0],&t3[1],&t3[2]);
+
     // Store the incoming rotation axis in w and normalize w
 
 	
