@@ -59,14 +59,13 @@ void ReSizeGLScene(int Width, int Height)
     glMatrixMode(GL_MODELVIEW);
 }
 
-void drawRotatedTeapot(float rotx, float roty, float rotz, float move_xaxis)
+void drawRotatedTeapot(float rotx, float roty, float rotz, float a)
 {
-	// Move Teapot along x-axis
-	glTranslatef(move_xaxis,0,0);
-
+	glTranslatef(a,0,0);
     glRotatef(rotx, 1.0, 0.0, 0.0);
     glRotatef(roty, 0.0, 1.0, 0.0);
     glRotatef(rotz, 0.0, 0.0, 1.0);
+    // teapot
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -96,15 +95,13 @@ void drawRotatedTeapot(float rotx, float roty, float rotz, float move_xaxis)
     glEnd();
 }
 
-/* Draw teapots, y_rotation and x_axismovement added as parameters
-*/
-void drawTeapots(float y_rotation, float x_axismovement)
+void drawTeapots(float y_rotation, float x_asmovement)
 {
     /* This function is called from DrawGLScene() below */
 
     glPushMatrix();
 
-    drawRotatedTeapot(x_rotation, y_rotation, z_rotation, x_axismovement);
+    drawRotatedTeapot(x_rotation, y_rotation, z_rotation, x_asmovement);
 
     glPopMatrix();
 }
