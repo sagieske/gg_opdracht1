@@ -108,7 +108,6 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 
 	// Normalize w
 	normalize(&w[0]);
-	printVector(w);
 
     // Compute the value of t, based on w
 	makeT(&t[0], w);
@@ -146,10 +145,9 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 
     GLfloat A[16] =
     {
-		// letterlijk uit assignment, misschien kolommen en rijen omdraaien?
-        u[0], v[0], w[0], 0.0,
-        u[1], v[1], w[1], 0.0,
-     	u[2], v[2], w[2], 0.0,
+        u[0], u[1], u[2], 0.0,
+        v[0], v[1], v[2], 0.0,
+     	w[0], w[1], w[2], 0.0,
         0.0, 0.0, 0.0, 1.0
     };
 
@@ -159,8 +157,8 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 
     GLfloat B[16] =
     {
-        1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
+        cos(angle), sin(angle), 0.0, 0.0,
+        -sin(angle), cos(angle), 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
         0.0, 0.0, 0.0, 1.0
     };
@@ -169,11 +167,11 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 
     GLfloat C[16] =
     {
-		// letterlijk uit assignment, misschien kolommen en rijen omdraaien?
-        u[0], u[1], u[2], 0.0,
-        v[0], v[1], v[2], 0.0,
-     	w[0], w[1], w[2], 0.0,
+		u[0], v[0], w[0], 0.0,
+        u[1], v[1], w[1], 0.0,
+     	u[2], v[2], w[2], 0.0,
         0.0, 0.0, 0.0, 1.0
+
     };
 
     //
