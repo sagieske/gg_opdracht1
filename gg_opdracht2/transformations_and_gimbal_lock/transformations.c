@@ -152,13 +152,14 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
     };
 
     // Convert 'angle' to radians
+	GLfloat radian = angle * (M_PI/180);
 
     // Specify matrix B
 
     GLfloat B[16] =
     {
-        cos(angle), sin(angle), 0.0, 0.0,
-        -sin(angle), cos(angle), 0.0, 0.0,
+        cos(radian), sin(radian), 0.0, 0.0,
+        -sin(radian), cos(radian), 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
         0.0, 0.0, 0.0, 1.0
     };
