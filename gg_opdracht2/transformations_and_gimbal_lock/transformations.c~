@@ -75,8 +75,8 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
     //
     GLfloat t1[3] = {1.0,2.0,3.0};
     GLfloat t2[3] = {3.0,2.0,1.0};
-    GLfloat *t3 = *cross(t1,t2);
-    printf("dot %f, cross (%f,%f,%f)\n",dot(t1,t2),&t3[0],&t3[1],&t3[2]);
+    GLfloat t3[3] = cross(t1,t2);
+    printf("dot %f, cross (%f,%f,%f)\n",dot(t1,t2),t3[0],t3[1],t3[2]);
 
     // Store the incoming rotation axis in w and normalize w
 
