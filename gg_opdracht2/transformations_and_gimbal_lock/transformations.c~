@@ -57,9 +57,10 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
     //
     // 1. Create the orthonormal basis
     //
+	
+	
     // Store the incoming rotation axis in w and normalize w
 
-	
     // Compute the value of t, based on w
 
     // Compute u = t x w
