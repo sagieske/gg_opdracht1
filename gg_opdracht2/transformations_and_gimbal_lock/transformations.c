@@ -58,6 +58,21 @@ GLfloat dot(GLfloat u[3], GLfloat v[3])
 	return ans;
 }
 
+
+
+GLfloat makeT(GLfloat *t, GLfloat w[3])
+{
+	int i=0;
+	if (w[i] > w[1])
+		i=1;
+	if (w[i] > w[2])
+		i=2;
+	t[0] = w[0];
+	t[1] = w[1];
+	t[2] = w[2];
+	t[i] = 1;
+}
+	
 /* Function to calculate crossproduct between two vectors
 */
 // cross(&ans[0], v1, v2)
@@ -97,7 +112,7 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
     // Normalize u
 
     // Compute v = w x u
-
+	cross(&v[0],w,u);
     // At this point u, v and w should form an orthonormal basis.
     // If your routine does not seem to work correctly it might be
     // a good idea to the check the vector values.
