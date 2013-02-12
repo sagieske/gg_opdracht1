@@ -66,21 +66,21 @@ void cross(GLfloat *ans, GLfloat u[3], GLfloat v[3])
 
 void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
-    GLfloat u[3], v[3], w[3], t[3];
+    GLfloat u[3], v[3], t[3];
 
     //
     // 1. Create the orthonormal basis
-    //
-    GLfloat t1[3] = {1.0,2.0,3.0};
-    GLfloat t2[3] = {3.0,2.0,1.0};
-    GLfloat a1;
-    GLfloat a2[3];
-    a1 = dot(t1,t2);
-    cross(&a2[0],t1,t2);
-    printf("dot %f, cross (%f,%f,%f)\n",a1,a2[0],a2[1],a2[2]);
 
-    // Store the incoming rotation axis in w and normalize w
+    // Store the incoming rotation axis in w and 
+ 	GLfloat w[3] = {x,y,z};
 
+	// Normalize w
+ 	GLfloat length =  sqrt(dot(w,w));
+	w[0] = w[0] / length;
+	w[1] = w[1] / length;
+	w[2] = w[2] / length;
+
+	
     // Compute the value of t, based on w
 
     // Compute u = t x w
@@ -96,14 +96,15 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
     //
     // 2. Set up the three matrices making up the rotation
     //
-
     // Specify matrix A
+
 
     GLfloat A[16] =
     {
-        1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
+		// letterlijk uit assignment, misschien kolommen en rijen omdraaien?
+        u[0], v[0], w[0], 0.0,
+        u[1], v[1], w[1], 0.0,
+     	u[2], v[2], w[2], 0.0,
         0.0, 0.0, 0.0, 1.0
     };
 
@@ -123,9 +124,10 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 
     GLfloat C[16] =
     {
-        1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
+		// letterlijk uit assignment, misschien kolommen en rijen omdraaien?
+        u[0], u[1], u[2], 0.0,
+        v[0], v[1], v[2], 0.0,
+     	w[0], w[1], w[2], 0.0,
         0.0, 0.0, 0.0, 1.0
     };
 
