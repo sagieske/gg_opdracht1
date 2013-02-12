@@ -49,7 +49,8 @@ void myTranslatef(GLfloat x, GLfloat y, GLfloat z)
 
     glMultMatrixf(M);
 }
-
+/* Function to calculate dotproduct between two vectors
+*/
 GLfloat dot(GLfloat u[3], GLfloat v[3])
 {
 	GLfloat ans;
@@ -57,6 +58,9 @@ GLfloat dot(GLfloat u[3], GLfloat v[3])
 	return ans;
 }
 
+/* Function to calculate crossproduct between two vectors
+*/
+// cross(&ans[0], v1, v2)
 void cross(GLfloat *ans, GLfloat u[3], GLfloat v[3])
 {
 	ans[0] = u[1]*v[2]-u[2]*v[1];
@@ -80,10 +84,15 @@ void myRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 	w[1] = w[1] / length;
 	w[2] = w[2] / length;
 
-	
     // Compute the value of t, based on w
-
+	makeT(&t[0], w);
+	
     // Compute u = t x w
+	GLfloat cross_tw[3] = cross(&cross_tw[0], t, w);
+ 	GLfloat length_tw =  sqrt(dot(cross_tw,cross_tw));	
+	u[0] = cross_tw[0] / length_tw;
+	u[1] = cross_tw[1] / length_tw;
+	u[2] = cross_tw[2] / length_tw;
 
     // Normalize u
 
