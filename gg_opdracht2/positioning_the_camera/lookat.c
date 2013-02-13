@@ -68,8 +68,16 @@ void myLookAt(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ,
 	//A translation by −VRP (eye coordinates)
 	glTranslatef(-eyeX,-eyeY,-eyeZ);
 
-	GLfloat cx[3], cy[3], cz[3];
+	// TODO: A coordinate system change to camera coordinates. 
+    GLfloat M[16] =
+    {
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    };
 
+	GLfloat cx[3], cy[3], cz[3];
 
 	// cz = vector pointing from Pcamera to PlookAt .
 	cz[0] = centerX - eyeX;
@@ -77,13 +85,21 @@ void myLookAt(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ,
 	cz[2] = centerZ - eyeZ;
 	normalize(&cz[0]);
 
-	//cx = up x cz and normalize cx	
+	// cx = up x cz and normalize cx	
 	cross(&cx[0], up, cz);
 	normalize(&cx[0]);
 
-	// TODO: cy vector simply is orthogonal to both cx and cz
+	// cy vector simply is orthogonal to both cx and cz, already normalized
+	cross(&cy[0], cx, cz);
+
+	// Rotation matrix R that produces world coordinates when camera coordinates are given:
+	GLfloat R[3];
+	R[0] = cx[0]*cx[1]-cx[2];
+	R[1] = cy[0]*cy[1]-cy[2];
+	R[2] = cz[0]*cz[1]-cz[2];
+
+	// TODO: Transposed rotation matrix R ?? 
 
 
-    // A coordinate system change to camera coordinates.
 
 }
