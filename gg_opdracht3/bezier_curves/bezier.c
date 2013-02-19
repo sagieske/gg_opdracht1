@@ -18,6 +18,36 @@
 #include "bezier.h"
 #include <stdio.h>
 
+
+
+
+/* Calculate factorial
+ */
+int
+fact(int fac){
+	int temp = 1;
+	for(int i = 1; i <= fac; i++){
+		temp *= i;
+	}
+	return temp;
+}
+
+/* Calculate binomial distribution 
+ */
+float
+binomial(int i, int num_points){
+	return fact(num_points) / (fact(i) * fact(num_points-i));
+}
+
+/* Calculate Bernstein basis polynomials
+ */
+float
+bernstein(int i, int num_points, float u){
+	// TODO: pow undefined???????
+	return 1;
+	//return binomial(i,num_points) * pow(u,i) * pow((1-u),(num_points-i));
+}
+
 /* Given a Bezier curve defined by the 'num_points' control points
  * in 'p' compute the position of the point on the curve for parameter
  * value 'u'.
@@ -25,12 +55,23 @@
  * Return the x and y values of the point by setting *x and *y,
  * respectively.
  */
-
 void
 evaluate_bezier_curve(float *x, float *y, control_point p[], int num_points, float u)
 {
     *x = 0.0;
     *y = 0.0;
+
+	// Loop for sum	
+	for(int i = 0; i <= num_points; i++){
+		float temp;
+		temp = bernstein(i,num_points,u);
+	
+		// change x and y coordinates
+		*x += temp * p[i].x;
+		*y += temp * p[i].y;
+		}
+	printf("x: %f, y: %f", *x, *y);
+
 }
 
 /* Draw a Bezier curve defined by the control points in p[], which
