@@ -1,4 +1,4 @@
-/* Computer Graphics, Assignment 5, Orthogonal projection
+ /* Computer Graphics, Assignment 5, Orthogonal projection
  *
  * Filename ........ ortho.c
  * Description ..... Contains the re-programmed orthogonal projection matrix
@@ -32,5 +32,14 @@ void myOrtho(GLdouble left,
              GLdouble top,
              GLdouble near,
              GLdouble far) {
+
+    GLfloat M[16] =
+    {
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 1.0
+    };
+    
 
 }
