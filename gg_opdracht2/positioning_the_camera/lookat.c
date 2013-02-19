@@ -53,14 +53,6 @@ void normalize(GLfloat *vector){
 	vector[1] = vector[1] / length;
 	vector[2] = vector[2] / length;
 }
-/*
-void transpose(GLfloat *matrix)
-{
-	GLfloat tmp;
-	tmp = matrix[1]; matrix[1] = matrix[3]; matrix[3] = tmp;
-	tmp = matrix[2]; matrix[2] = matrix[6]; matrix[6] = tmp;
-	tmp = matrix[5]; matrix[5] = matrix[7]; matrix[7] = tmp;
-}*/
 	
 void myLookAt(GLdouble eyeX, GLdouble eyeY, GLdouble eyeZ,
               GLdouble centerX, GLdouble centerY, GLdouble centerZ,
