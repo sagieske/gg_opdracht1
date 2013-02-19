@@ -32,5 +32,14 @@ void myOrtho(GLdouble left,
              GLdouble top,
              GLdouble near,
              GLdouble far) {
+             
+    GLdouble M[16] = {
+    	2.0 / (right - left) , 0 , 0 , 0,
+    	0 , 2.0 / (top - bottom) , 0 , 0,
+    	0 , 0 ,  2.0 / (near - far)  , 0,
+    	-(right+left)/(right-left), -(top+bottom)/(top-bottom), -(near+far)/(near-far), 1
+    };
+    
+    glMultMatrixd(&M[0]);
 
 }

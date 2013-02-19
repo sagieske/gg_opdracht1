@@ -209,6 +209,10 @@ void keyPressed(unsigned char key, int x, int y)
     default:
       useMyOrtho = !useMyOrtho;
       ReSizeGLScene(windowWidth,windowHeight);
+      if (useMyOrtho)
+        glutSetWindowTitle("Your transformations");
+      else
+        glutSetWindowTitle("OpenGL transformations");
   }      
   DrawGLScene();
 }
