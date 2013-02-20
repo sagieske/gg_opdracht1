@@ -37,16 +37,19 @@ fact(int fac){
  */
 float
 binomial(int i, int num_points){
-	//printf("bin: %f --> i: %f, num: %f", fact(num_points) / (fact(i) * fact(num_points-i)),i,num_points); 
-	return fact(num_points) / (fact(i) * fact(num_points-i));
+	//printf("i: %d, n = %d", i, num_points);
+	//printf("bin (in binomial): %f", (float)fact(num_points) / (float)(fact(i) * fact(num_points-i)));
+ 	/*printf("fact(n): %d \n", fact(num_points) );
+ 	printf("fact(i): %d \n", fact(i) );
+ 	printf("fact(n-i): %d \n", fact(num_points-i) );*/
+	return (float)fact(num_points) / (float)(fact(i) * fact(num_points-i));
 }
 
 /* Calculate Bernstein basis polynomials
  */
 float
 bernstein(int i, int num_points, float u){
-	printf(" i: %d, num_points: %d, u: %f\n", i, num_points, u);
-	return binomial(i,num_points) * pow(u,i) * pow((1-u),(num_points-i));
+	return binomial(i,num_points) * (float)pow(u,i) * (float)pow((1-u),(num_points-i));
 }
 
 /* Given a Bezier curve defined by the 'num_points' control points
@@ -59,18 +62,21 @@ bernstein(int i, int num_points, float u){
 void
 evaluate_bezier_curve(float *x, float *y, control_point p[], int num_points, float u)
 {
-    //*x = 0.0;
-    //*y = 0.0;
+	//*x = 0.0;
+	//*y = 0.0;
 	// Loop for sum	
-	for(int i = 1; i <= num_points; i++){
+	for(int i = 0; i <= num_points; i++){
+
 		float temp;
-		temp = bernstein(i,num_points,u);
-		//printf("temp: %f, i: %d, num_points: %d, u: %f\n", temp, i, num_points, u);
+		temp = bernstein(i+1,num_points,u);
+
 		// change x and y coordinates
-		*x += temp * p[i].x;
-		*y += temp * p[i].y;
+		printf("before 1: x: %f, y: %f\n", *x, *y);
+		*x += (temp * p[i].x);
+		*y += (temp * p[i].y);
+		printf("after 1: x: %f, y: %f\n", *x, *y);
 		}
-	printf("x: %f, y: %f", *x, *y);
+
 
 }
 
@@ -106,7 +112,11 @@ draw_bezier_curve(int num_segments, control_point p[], int num_points)
 
 	// start point of line
 	glVertex2f(p[0].x, p[0].y);
+	//control_point test[];
 
+
+	*x =  p[0].x;
+	*y =  p[0].y;
 	// for every control point
 	for(int j = 0; j < num_points; j++){
 		// set up points
@@ -116,14 +126,15 @@ draw_bezier_curve(int num_segments, control_point p[], int num_points)
 		// draw lines for curve
 		for(int i=1; i < num_segments; i++){
 			// compute point
-			evaluate_bezier_curve(x, y, p, num_points, i);
-
+			//TODO: P needs to be the p of point at index j!! HOW? 
+			evaluate_bezier_curve(x, y, p, num_points, 0.4);
 			// draw line to next point
 			glVertex2f(*x,*y);
 		}
+
 	}
 	// end point of line
-	glVertex2f(p[num_points-1].x, p[num_points-1].y);
+	//glVertex2f(p[num_points-1].x, p[num_points-1].y);
 	glEnd();
 
 }
