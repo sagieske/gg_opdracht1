@@ -59,8 +59,8 @@ bernstein(int i, int num_points, float u){
 void
 evaluate_bezier_curve(float *x, float *y, control_point p[], int num_points, float u)
 {
-    *x = 0.0;
-    *y = 0.0;
+    //*x = 0.0;
+    //*y = 0.0;
 	// Loop for sum	
 	for(int i = 1; i <= num_points; i++){
 		float temp;
@@ -107,17 +107,20 @@ draw_bezier_curve(int num_segments, control_point p[], int num_points)
 	// start point of line
 	glVertex2f(p[0].x, p[0].y);
 
-	// set up points
-	*x =  p[0].x;
-	*y =  p[0].y;
+	// for every control point
+	for(int j = 0; j < num_points; j++){
+		// set up points
+		*x =  p[j].x;
+		*y =  p[j].y;
 
+		// draw lines for curve
+		for(int i=1; i < num_segments; i++){
+			// compute point
+			evaluate_bezier_curve(x, y, p, num_points, i);
 
-	for(int i=1; i < num_segments; i++){
-		// compute point
-		evaluate_bezier_curve(x, y, p, num_points, i);
-
-		// draw line to next point
-		glVertex2f(*x,*y);
+			// draw line to next point
+			glVertex2f(*x,*y);
+		}
 	}
 	// end point of line
 	glVertex2f(p[num_points-1].x, p[num_points-1].y);

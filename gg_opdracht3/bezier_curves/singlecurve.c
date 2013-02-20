@@ -267,6 +267,5 @@ main(int argc, char **argv)
     glutMotionFunc(motion_handler);
     glutDisplayFunc(draw_handler);
     glutMainLoop();
-
     return 0;
 }
