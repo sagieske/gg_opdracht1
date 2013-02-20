@@ -29,6 +29,7 @@ fact(int fac){
 	for(int i = 1; i <= fac; i++){
 		temp *= i;
 	}
+	printf("FACT");
 	return temp;
 }
 
@@ -36,6 +37,7 @@ fact(int fac){
  */
 float
 binomial(int i, int num_points){
+	printf("BIN");
 	return fact(num_points) / (fact(i) * fact(num_points-i));
 }
 
@@ -43,9 +45,9 @@ binomial(int i, int num_points){
  */
 float
 bernstein(int i, int num_points, float u){
-	// TODO: pow undefined???????
-	return 1;
-	//return binomial(i,num_points) * pow(u,i) * pow((1-u),(num_points-i));
+	//return 1;
+	printf("BERN");
+	return binomial(i,num_points) * pow(u,i) * pow((1-u),(num_points-i));
 }
 
 /* Given a Bezier curve defined by the 'num_points' control points
@@ -65,7 +67,6 @@ evaluate_bezier_curve(float *x, float *y, control_point p[], int num_points, flo
 	for(int i = 0; i <= num_points; i++){
 		float temp;
 		temp = bernstein(i,num_points,u);
-	
 		// change x and y coordinates
 		*x += temp * p[i].x;
 		*y += temp * p[i].y;
@@ -98,6 +99,27 @@ evaluate_bezier_curve(float *x, float *y, control_point p[], int num_points, flo
 void
 draw_bezier_curve(int num_segments, control_point p[], int num_points)
 {
+	float *x,*y;
+
+	glBegin(GL_LINE_STRIP);
+
+	// start point of line
+	glVertex2f(p[0].x, p[0].y);
+
+	// set up points
+	*x = p[0].x;
+	*y = p[0].y;
+
+	for(int i=0; i < num_segments; i++){
+		// compute point
+		evaluate_bezier_curve(&x, &y, p, num_points, i);
+
+		// draw line to next point
+		glVertex2f(*x,*y);
+	}
+	// end point of line
+	glVertex2f(p[num_points-1].x, p[num_points-1].y);
+	glEnd();
 }
 
 /* Find the intersection of a cubic Bezier curve with the line X=x.
