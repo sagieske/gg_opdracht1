@@ -37,6 +37,7 @@ fact(int fac){
  */
 float
 binomial(int i, int num_points){
+	//printf("bin: %f --> i: %f, num: %f", fact(num_points) / (fact(i) * fact(num_points-i)),i,num_points); 
 	return fact(num_points) / (fact(i) * fact(num_points-i));
 }
 
@@ -44,6 +45,7 @@ binomial(int i, int num_points){
  */
 float
 bernstein(int i, int num_points, float u){
+	printf(" i: %d, num_points: %d, u: %f\n", i, num_points, u);
 	return binomial(i,num_points) * pow(u,i) * pow((1-u),(num_points-i));
 }
 
@@ -59,12 +61,11 @@ evaluate_bezier_curve(float *x, float *y, control_point p[], int num_points, flo
 {
     *x = 0.0;
     *y = 0.0;
-
-	printf("HELLO\n");
 	// Loop for sum	
-	for(int i = 0; i <= num_points; i++){
+	for(int i = 1; i <= num_points; i++){
 		float temp;
 		temp = bernstein(i,num_points,u);
+		//printf("temp: %f, i: %d, num_points: %d, u: %f\n", temp, i, num_points, u);
 		// change x and y coordinates
 		*x += temp * p[i].x;
 		*y += temp * p[i].y;
@@ -97,27 +98,22 @@ evaluate_bezier_curve(float *x, float *y, control_point p[], int num_points, flo
 void
 draw_bezier_curve(int num_segments, control_point p[], int num_points)
 {
+
 	float *x,*y;
-	
 	x = malloc(sizeof(float));
 	y = malloc(sizeof(float));
 	glBegin(GL_LINE_STRIP);
 
 	// start point of line
 	glVertex2f(p[0].x, p[0].y);
-	printf("HELLO\n");
 
-	printf("%e, %e \n",p[0].x,p[0].y);
 	// set up points
 	*x =  p[0].x;
 	*y =  p[0].y;
-	printf("JAaaa");
 
-	//TODO: SEGMENTATION FAULT
 
-	for(int i=0; i < num_segments; i++){
+	for(int i=1; i < num_segments; i++){
 		// compute point
-
 		evaluate_bezier_curve(x, y, p, num_points, i);
 
 		// draw line to next point
@@ -126,6 +122,7 @@ draw_bezier_curve(int num_segments, control_point p[], int num_points)
 	// end point of line
 	glVertex2f(p[num_points-1].x, p[num_points-1].y);
 	glEnd();
+
 }
 
 /* Find the intersection of a cubic Bezier curve with the line X=x.
