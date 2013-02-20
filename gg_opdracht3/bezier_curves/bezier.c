@@ -17,6 +17,7 @@
 #include <math.h>
 #include "bezier.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 
 
@@ -59,6 +60,7 @@ evaluate_bezier_curve(float *x, float *y, control_point p[], int num_points, flo
     *x = 0.0;
     *y = 0.0;
 
+	printf("HELLO\n");
 	// Loop for sum	
 	for(int i = 0; i <= num_points; i++){
 		float temp;
@@ -96,25 +98,32 @@ void
 draw_bezier_curve(int num_segments, control_point p[], int num_points)
 {
 	float *x,*y;
-
+	
+	x = malloc(sizeof(float));
+	y = malloc(sizeof(float));
 	glBegin(GL_LINE_STRIP);
 
 	// start point of line
 	glVertex2f(p[0].x, p[0].y);
+	printf("HELLO\n");
 
+	printf("%e, %e \n",p[0].x,p[0].y);
 	// set up points
-	*x = p[0].x;
-	*y = p[0].y;
+	*x =  p[0].x;
+	*y =  p[0].y;
+	printf("JAaaa");
 
-/*
+	//TODO: SEGMENTATION FAULT
+
 	for(int i=0; i < num_segments; i++){
 		// compute point
-		evaluate_bezier_curve(&x, &y, p, num_points, i);
+
+		evaluate_bezier_curve(x, y, p, num_points, i);
 
 		// draw line to next point
 		glVertex2f(*x,*y);
 	}
-	// end point of line*/
+	// end point of line
 	glVertex2f(p[num_points-1].x, p[num_points-1].y);
 	glEnd();
 }
