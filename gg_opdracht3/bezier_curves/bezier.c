@@ -1,4 +1,5 @@
 /* Computer Graphics, Assignment, Bezier curves
+ *
  * Filename ........ bezier.c
  * Description ..... Bezier curves
  * Date ............ 22.07.2009
@@ -37,11 +38,6 @@ fact(int fac){
  */
 float
 binomial(int i, int num_points){
-	//printf("i: %d, n = %d", i, num_points);
-	//printf("bin (in binomial): %f", (float)fact(num_points) / (float)(fact(i) * fact(num_points-i)));
- 	/*printf("fact(n): %d \n", fact(num_points) );
- 	printf("fact(i): %d \n", fact(i) );
- 	printf("fact(n-i): %d \n", fact(num_points-i) );*/
 	return (float)fact(num_points) / (float)(fact(i) * fact(num_points-i));
 }
 
@@ -62,19 +58,16 @@ bernstein(int i, int num_points, float u){
 void
 evaluate_bezier_curve(float *x, float *y, control_point p[], int num_points, float u)
 {
-	//*x = 0.0;
-	//*y = 0.0;
+	*x = 0.0;
+	*y = 0.0;
 	// Loop for sum	
-	for(int i = 0; i <= num_points; i++){
-
+	for(int i = 0; i < num_points; i++){
 		float temp;
-		temp = bernstein(i+1,num_points,u);
+		temp = bernstein(i,num_points-1,u);
 
 		// change x and y coordinates
-		printf("before 1: x: %f, y: %f\n", *x, *y);
 		*x += (temp * p[i].x);
 		*y += (temp * p[i].y);
-		printf("after 1: x: %f, y: %f\n", *x, *y);
 		}
 
 
@@ -112,29 +105,16 @@ draw_bezier_curve(int num_segments, control_point p[], int num_points)
 
 	// start point of line
 	glVertex2f(p[0].x, p[0].y);
-	//control_point test[];
-
-
-	*x =  p[0].x;
-	*y =  p[0].y;
-	// for every control point
-	for(int j = 0; j < num_points; j++){
-		// set up points
-		*x =  p[j].x;
-		*y =  p[j].y;
 
 		// draw lines for curve
 		for(int i=1; i < num_segments; i++){
 			// compute point
-			//TODO: P needs to be the p of point at index j!! HOW? 
-			evaluate_bezier_curve(x, y, p, num_points, 0.4);
+			evaluate_bezier_curve(x, y, p, num_points, (float)i / (float)num_segments );
 			// draw line to next point
 			glVertex2f(*x,*y);
 		}
-
-	}
 	// end point of line
-	//glVertex2f(p[num_points-1].x, p[num_points-1].y);
+	glVertex2f(p[num_points-1].x, p[num_points-1].y);
 	glEnd();
 
 }
@@ -145,9 +125,81 @@ draw_bezier_curve(int num_segments, control_point p[], int num_points)
    Return 0 if no intersection exists.
 */
 
+
+float // calculate the root of a cubic function
+abcd(float a, float b, float c, float d)
+{
+	float D,Q,C, p,q;
+	
+	p = 2*b*b*b-9*a*b*c+27*a*a*d;
+	q = b*b-3*a*c;
+
+	Q = sqrt(p*p-4*q*q*q);
+	C = cbrtf((Q+p)/2);
+	
+	if (Q==0 && q==0)
+		return -b/3/a;
+
+	if (Q!=0 && q==0 && C==0)
+		C = cbrtf((-Q+2*b*b-9*a*b*c+27*a*a*d)/2);
+	return -b/3/a-C/3/a-q/3/a/C;
+}
+
+float // calculate the root of a quadratic function
+abc(float a, float b, float c)
+{
+	float d,xa,xb;
+
+	d = b*b-4*a*c;
+	
+	xa = -b-sqrt(d)/2/a;
+	xb = -b+sqrt(d)/2/a;
+
+//	if (xa > xb)
+		return xa;
+//	return xb;
+}
+
+float // calculate the root of a linear function
+ab(float a, float b)
+{
+	return -b/a;
+}
+
 int
 intersect_cubic_bezier_curve(float *y, control_point p[], float x)
 {
-    return 0;
+	if (p[0].x < x && x < p[3].x)
+	{
+//		printf("(%.4f,%.4f)  ",x,*y);
+		float a,b,c,d, r,q, u;
+
+		// set parameters for calculation
+		a = -p[0].x+3*p[1].x-3*p[2].x+p[3].x;
+		b = 3*p[0].x-6*p[1].x+3*p[2].x;
+		c = -3*p[0].x+3*p[1].x;
+		d = p[0].x-x;
+//		printf("a=%.4f  b=%.4f  c=%.4f  d=%.4f  ",a,b,c,d);
+		
+		// use correct function to calculate u for given x
+		if (a!=0)
+			u = abcd(a,b,c,d);
+		else if (b!=0)
+			u = abc(b,c,d);
+		else if (c!=0)
+			u = ab(c,d);
+		else
+			u = d;
+
+		// calculate y form u
+		*y = (-p[0].y+3*p[1].y-3*p[2].y+p[3].y)*u*u*u 
+			+ (3*p[0].y-6*p[1].y+3*p[2].y)*u*u
+			+ (-3*p[0].y+3*p[1].y)*u
+			+ (p[0].y);
+		
+//		printf("u=%.4f, y=%.4f\n",u,*y);
+		return 1;
+	}
+	return 0;
 }
 
