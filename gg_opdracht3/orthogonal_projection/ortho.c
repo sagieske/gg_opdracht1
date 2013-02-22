@@ -33,6 +33,7 @@ void myOrtho(GLdouble left,
              GLdouble near,
              GLdouble far) {
              
+	// Scaling and translation for a view box
     GLdouble M[16] = {
     	2.0 / (right - left) , 0 , 0 , 0,
     	0 , 2.0 / (top - bottom) , 0 , 0,
@@ -41,14 +42,6 @@ void myOrtho(GLdouble left,
     };
     
     glMultMatrixd(&M[0]);
-
-    GLfloat M[16] =
-    {
-        0.0, 0.0, 0.0, 0.0,
-        0.0, 0.0, 0.0, 0.0,
-        0.0, 0.0, 0.0, 0.0,
-        0.0, 0.0, 0.0, 1.0
-    };
     
 
 }

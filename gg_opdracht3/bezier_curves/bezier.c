@@ -5,10 +5,10 @@
  * Date ............ 22.07.2009
  * Created by ...... Paul Melis
  *
- * Student name ....
- * Student email ...
- * Collegekaart ....
- * Date ............
+ * Student name .... Sharon Gieske & Ysbrand Galama
+ * Student email ... sharongieske@gmail.com & y.galama@hotmail.com
+ * Collegekaart .... 6167667 & 10262067
+ * Date ............ 22/02/2013
  * Comments ........
  *
  *
@@ -106,13 +106,13 @@ draw_bezier_curve(int num_segments, control_point p[], int num_points)
 	// start point of line
 	glVertex2f(p[0].x, p[0].y);
 
-		// draw lines for curve
-		for(int i=1; i < num_segments; i++){
-			// compute point
-			evaluate_bezier_curve(x, y, p, num_points, (float)i / (float)num_segments );
-			// draw line to next point
-			glVertex2f(*x,*y);
-		}
+	// draw lines for curve
+	for(int i=1; i < num_segments; i++){
+		// compute point
+		evaluate_bezier_curve(x, y, p, num_points, (float)i / (float)num_segments );
+		// draw line to next point
+		glVertex2f(*x,*y);
+	}
 	// end point of line
 	glVertex2f(p[num_points-1].x, p[num_points-1].y);
 	glEnd();
@@ -126,23 +126,23 @@ draw_bezier_curve(int num_segments, control_point p[], int num_points)
 */
 
 
-float // calculate the root of a cubic function
+float // calculate the root of a cubic function (formulas from http://en.wikipedia.org/wiki/Cubic_function)
 abcd(float a, float b, float c, float d)
 {
 	float D,Q,C, p,q;
 	
-	p = 2*b*b*b-9*a*b*c+27*a*a*d;
-	q = b*b-3*a*c;
-
-	Q = sqrt(p*p-4*q*q*q);
-	C = cbrtf((Q+p)/2);
+	p = 2*b*b*b - 9*a*b*c + 27*a*a*d;
+	q = b*b - 3*a*c;
+	
+	Q = sqrt(p*p - 4*q*q*q);
+	C = cbrtf( (Q+p)/2 );
 	
 	if (Q==0 && q==0)
-		return -b/3/a;
+		return -b/ 3/a;
 
-	if (Q!=0 && q==0 && C==0)
-		C = cbrtf((-Q+2*b*b-9*a*b*c+27*a*a*d)/2);
-	return -b/3/a-C/3/a-q/3/a/C;
+	else if (Q!=0 && q==0 && C==0)
+		C = cbrtf((-Q + p) / 2);
+	return -b/ 3/a - C/ 3/a - q/ 3/a/C;
 }
 
 float // calculate the root of a quadratic function
@@ -150,14 +150,12 @@ abc(float a, float b, float c)
 {
 	float d,xa,xb;
 
-	d = b*b-4*a*c;
+	d = b*b - 4*a*c;
 	
-	xa = -b-sqrt(d)/2/a;
-	xb = -b+sqrt(d)/2/a;
+	xa = -b - sqrt(d)/ 2/a;
+	xb = -b + sqrt(d)/ 2/a;
 
-//	if (xa > xb)
-		return xa;
-//	return xb;
+	return xa;
 }
 
 float // calculate the root of a linear function
@@ -171,15 +169,13 @@ intersect_cubic_bezier_curve(float *y, control_point p[], float x)
 {
 	if (p[0].x < x && x < p[3].x)
 	{
-//		printf("(%.4f,%.4f)  ",x,*y);
 		float a,b,c,d, r,q, u;
 
 		// set parameters for calculation
-		a = -p[0].x+3*p[1].x-3*p[2].x+p[3].x;
-		b = 3*p[0].x-6*p[1].x+3*p[2].x;
-		c = -3*p[0].x+3*p[1].x;
-		d = p[0].x-x;
-//		printf("a=%.4f  b=%.4f  c=%.4f  d=%.4f  ",a,b,c,d);
+		a = -p[0].x + 3*p[1].x - 3*p[2].x + p[3].x;
+		b = 3*p[0].x - 6*p[1].x + 3*p[2].x;
+		c = -3*p[0].x + 3*p[1].x;
+		d = p[0].x - x;
 		
 		// use correct function to calculate u for given x
 		if (a!=0)
@@ -190,14 +186,14 @@ intersect_cubic_bezier_curve(float *y, control_point p[], float x)
 			u = ab(c,d);
 		else
 			u = d;
-
+		if (isnan(u))
+			return 0;
 		// calculate y form u
-		*y = (-p[0].y+3*p[1].y-3*p[2].y+p[3].y)*u*u*u 
-			+ (3*p[0].y-6*p[1].y+3*p[2].y)*u*u
-			+ (-3*p[0].y+3*p[1].y)*u
-			+ (p[0].y);
+		*y = ( -p[0].y + 3*p[1].y - 3*p[2].y + p[3].y ) *u*u*u 
+			+ ( 3*p[0].y - 6*p[1].y + 3*p[2].y ) *u*u
+			+ ( -3*p[0].y + 3*p[1].y ) *u
+			+ ( p[0].y );
 		
-//		printf("u=%.4f, y=%.4f\n",u,*y);
 		return 1;
 	}
 	return 0;
