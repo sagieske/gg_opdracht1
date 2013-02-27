@@ -160,7 +160,7 @@ ray_trace(void)
     vec3    forward_vector, right_vector, up_vector;
     int     i, j;
     float   image_plane_width, image_plane_height;
-    vec3    color;
+    vec3    color, colortemp;
     char    buf[128];
 
     struct timeval  t0, t1;
@@ -205,14 +205,20 @@ ray_trace(void)
 			tempj = -image_plane_height/2 + j*image_plane_height/framebuffer_height;
 
 			//TODO: HOW??
-            color = v3_add(forward_vector, 
+            colortemp = v3_add(forward_vector, 
 						v3_add( 
 							v3_multiply(right_vector, tempi),
 							v3_multiply(up_vector, tempj)));
+
+			if( i < 250 && i > 240  && j < 250 && j > 240){
+				printf("COLOR1: %f,%f,%f\n", colortemp.x, colortemp.y, colortemp.z);
+			}
 				
 			// Ray trace
-			color = ray_color(0, vec3 ray_origin, vec3 color);
-
+			color = ray_color(0, v3_create(0,0,0), colortemp);
+			if(  i < 250 && i > 240  && j < 250 && j > 240){
+				printf("COLOR2: %f,%f,%f\n", color.x, color.y, color.z);
+			}
 
             // Output pixel color
             put_pixel(i, j, color.x, color.y, color.z);
