@@ -202,23 +202,16 @@ ray_trace(void)
 
 			// TODO: calculating what?
 			tempi = -image_plane_width /2 + i*image_plane_width /framebuffer_width;
-			tempj = -image_plane_height/2 + j*image_plane_height/framebuffer_height;
+			tempj =  image_plane_height/2 - j*image_plane_height/framebuffer_height;
 
 			//TODO: HOW??
             colortemp = v3_add(forward_vector, 
 						v3_add( 
 							v3_multiply(right_vector, tempi),
 							v3_multiply(up_vector, tempj)));
-
-			if( i < 250 && i > 240  && j < 250 && j > 240){
-				printf("COLOR1: %f,%f,%f\n", colortemp.x, colortemp.y, colortemp.z);
-			}
 				
 			// Ray trace
-			color = ray_color(0, v3_create(0,0,0), colortemp);
-			if(  i < 250 && i > 240  && j < 250 && j > 240){
-				printf("COLOR2: %f,%f,%f\n", color.x, color.y, color.z);
-			}
+			color = ray_color(0, scene_camera_position, colortemp);
 
             // Output pixel color
             put_pixel(i, j, color.x, color.y, color.z);
