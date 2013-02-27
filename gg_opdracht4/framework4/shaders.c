@@ -46,6 +46,7 @@ shade_matte(intersection_point ip)
 	for (int i=0; i<scene_num_lights; ++i)
 	{
 		// Only increase light intensity if no object in way between point and lightsource
+		// TODO: sphere self-shadowing, use offset in ray origin?
 		if(shadow_check(ip.p, scene_lights[i].position) == 0){
 
 			temp = v3_subtract(scene_lights[i].position, ip.p);
@@ -71,7 +72,54 @@ shade_matte(intersection_point ip)
 vec3
 shade_blinn_phong(intersection_point ip)
 {
-    return v3_create(1, 0, 0);
+	// constants
+	float kd, ks, alpha;
+	kd = 0.8;
+	ks = 0.5;
+	alpha = 50;
+	
+	vec3 cd, cs;
+	cd = v3_create(1,0,0);
+	cs = v3_create(1,1,1);
+	vec3 temp = v3_create(0,0,0);
+	vec3 temp_highlight = v3_create(0,0,0);
+
+	//final surface color cf
+	float intensity, highlight,  tmp;
+
+	intensity = 0;
+	highlight = 0;
+	// calculate intensity from all ligths
+	for (int i=0; i<scene_num_lights; ++i){
+		if(shadow_check(ip.p, scene_lights[i].position) == 0){
+
+			temp = v3_subtract(scene_lights[i].position, ip.p);
+			// vector scale by intensity
+			temp = v3_normalize(temp);
+		
+			temp_highlight = v3_multiply( 
+								v3_add(ip.i, temp), 
+								1/(v3_length(
+									v3_add(ip.i, temp))));
+			highlight += v3_dotprod( temp_highlight, ip.n);
+
+			temp = v3_multiply(temp,scene_lights[i].intensity);
+			tmp = v3_dotprod( temp, ip.n);
+
+			// only increase if light in direction
+			if (tmp > 0)
+				intensity += tmp;
+
+		}
+	}
+	
+	return v3_add(
+						v3_multiply(cd,(scene_ambient_light + kd * intensity)),
+						v3_multiply(cs,ks * highlight)
+						);
+
+
+   // return v3_create(1, 0, 0);
 }
 
 vec3
