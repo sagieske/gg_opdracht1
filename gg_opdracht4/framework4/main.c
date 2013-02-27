@@ -196,9 +196,13 @@ ray_trace(void)
             // ...
             // ...
             // ...
+            float tmpi,tmpj;
+            tmpi = (-image_plane_width /2 + i*image_plane_width /framebuffer_width );
+            tmpj = (-image_plane_height/2 + j*image_plane_height/framebuffer_height);
+             
             color = forward_vector 
-            	+ (-image_plane_width /2 + i*image_plane_width /framebuffer_width ) * right_vector
-            	+ (-image_plane_height/2 + j*image_plane_height/framebuffer_height) * up_vector;
+            	+ v3_create(tmpi,tmpi,tmpi) * right_vector
+            	+ v3_create(tmpj,tmpj,tmpj) * up_vector;
             
 
             // Output pixel color
