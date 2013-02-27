@@ -209,6 +209,10 @@ ray_trace(void)
 						v3_add( 
 							v3_multiply(right_vector, tempi),
 							v3_multiply(up_vector, tempj)));
+				
+			// Ray trace
+			color = ray_color(0, vec3 ray_origin, vec3 color);
+
 
             // Output pixel color
             put_pixel(i, j, color.x, color.y, color.z);
