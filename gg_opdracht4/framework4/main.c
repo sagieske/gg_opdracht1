@@ -196,6 +196,10 @@ ray_trace(void)
             // ...
             // ...
             // ...
+            color = forward_vector 
+            	+ (-image_plane_width /2 + i*image_plane_width /framebuffer_width ) * right_vector
+            	+ (-image_plane_height/2 + j*image_plane_height/framebuffer_height) * up_vector;
+            
 
             // Output pixel color
             put_pixel(i, j, color.x, color.y, color.z);
