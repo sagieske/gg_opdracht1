@@ -188,6 +188,9 @@ ray_trace(void)
     // ...
     // ...
 
+
+	float tempi, tempj;
+
     // Loop over all pixels in the framebuffer
     for (j = 0; j < framebuffer_height; j++)
     {
@@ -196,10 +199,15 @@ ray_trace(void)
             // ...
             // ...
             // ...
-            color = forward_vector 
-            	+ (-image_plane_width /2 + i*image_plane_width /framebuffer_width ) * right_vector
-            	+ (-image_plane_height/2 + j*image_plane_height/framebuffer_height) * up_vector;
-            
+			// TODO: calculating what?
+			tempi = -image_plane_width /2 + i*image_plane_width /framebuffer_width;
+			tempj = -image_plane_height/2 + j*image_plane_height/framebuffer_height;
+
+			//TODO: HOW??
+            color = v3_add(forward_vector, 
+						v3_add( 
+							v3_multiply(right_vector, tempi),
+							v3_multiply(up_vector, tempj)));
 
             // Output pixel color
             put_pixel(i, j, color.x, color.y, color.z);
@@ -296,7 +304,6 @@ draw_scene(void)
         {
             // clear the framebuffer
             memset(framebuffer, 255, 3*framebuffer_width*framebuffer_height);
-
             // trace a new picture
             ray_trace();
 
