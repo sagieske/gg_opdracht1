@@ -36,7 +36,8 @@ shade_constant(intersection_point ip)
 vec3
 shade_matte(intersection_point ip)
 {
-	float intensity,tmp;
+	float intensity,tmp,zero;
+	zero = 0.0001;
 	vec3 temp = v3_create(0,0,0);
 	
 	// ambient light everywhere
@@ -46,8 +47,7 @@ shade_matte(intersection_point ip)
 	for (int i=0; i<scene_num_lights; ++i)
 	{
 		// Only increase light intensity if no object in way between point and lightsource
-		// TODO: sphere self-shadowing, use offset in ray origin?
-		if(shadow_check(ip.p, scene_lights[i].position) == 0){
+		if(shadow_check(v3_add(ip.p,v3_multiply(ip.n,zero)), scene_lights[i].position) == 0){
 
 			temp = v3_subtract(scene_lights[i].position, ip.p);
 			// vector scale by intensity
@@ -73,10 +73,11 @@ vec3
 shade_blinn_phong(intersection_point ip)
 {
 	// constants
-	float kd, ks, alpha;
+	float kd, ks, alpha,zero;
 	kd = 0.8;
 	ks = 0.5;
 	alpha = 50;
+	zero = 0.0001;
 	
 	vec3 cd, cs;
 	cd = v3_create(1,0,0);
@@ -91,18 +92,21 @@ shade_blinn_phong(intersection_point ip)
 	highlight = 0;
 	// calculate intensity from all ligths
 	for (int i=0; i<scene_num_lights; ++i){
-		if(shadow_check(ip.p, scene_lights[i].position) == 0){
+		if(shadow_check(v3_add(ip.p,v3_multiply(ip.n,zero)), scene_lights[i].position) == 0){
 
 			temp = v3_subtract(scene_lights[i].position, ip.p);
 			// vector scale by intensity
 			temp = v3_normalize(temp);
-		
+			
+			// Phong shader sum
 			temp_highlight = v3_multiply( 
 								v3_add(ip.i, temp), 
 								1/(v3_length(
 									v3_add(ip.i, temp))));
-			highlight += v3_dotprod( temp_highlight, ip.n);
-
+			
+			highlight += scene_lights[i].intensity * pow(v3_dotprod( temp_highlight, ip.n),alpha);
+			
+			// light sum
 			temp = v3_multiply(temp,scene_lights[i].intensity);
 			tmp = v3_dotprod( temp, ip.n);
 
@@ -114,18 +118,25 @@ shade_blinn_phong(intersection_point ip)
 	}
 	
 	return v3_add(
-						v3_multiply(cd,(scene_ambient_light + kd * intensity)),
-						v3_multiply(cs,ks * highlight)
-						);
-
-
-   // return v3_create(1, 0, 0);
+					v3_multiply(cd, (scene_ambient_light + kd * intensity) ),
+					v3_multiply(cs, ks * highlight) );
 }
 
-vec3
+vec3 // TODO: werkt bijna, maar puntjes op spheres zijn terug...
 shade_reflection(intersection_point ip)
 {
-    return v3_create(1, 0, 0);
+    float refpart;
+    refpart = 0.25;
+    
+    vec3 ray, color;
+
+    ray = v3_subtract( v3_multiply(ip.n, 2 * v3_dotprod(ip.i, ip.n)), ip.i);
+    color = ray_color( ip.ray_level+1, ip.p, ray);
+    
+    
+    return v3_add(
+    		v3_multiply(shade_blinn_phong(ip), 1.0 - refpart),
+    		v3_multiply(color,refpart));
 }
 
 // Returns the shaded color for the given point to shade.
