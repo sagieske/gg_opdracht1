@@ -39,19 +39,29 @@ shade_matte(intersection_point ip)
 	float intensity,tmp;
 	vec3 temp = v3_create(0,0,0);
 	
+	// ambient light everywhere
 	intensity = scene_ambient_light;
 	
+	// calculate intensity from all ligths
 	for (int i=0; i<scene_num_lights; ++i)
 	{
-		temp = v3_subtract(scene_lights[i].position, ip.p);
-		temp = v3_normalize(temp);
-		temp = v3_multiply(temp,scene_lights[i].intensity);
+		// Only increase light intensity if no object in way between point and lightsource
+		if(shadow_check(ip.p, scene_lights[i].position) == 0){
+
+			temp = v3_subtract(scene_lights[i].position, ip.p);
+			// vector scale by intensity
+			temp = v3_normalize(temp);
+			temp = v3_multiply(temp,scene_lights[i].intensity);
 		
-		tmp = v3_dotprod( temp, ip.n);
-		if (tmp > 0)
-			intensity += tmp;
+			tmp = v3_dotprod( temp, ip.n);
+
+			// only increase if light in direction
+			if (tmp > 0)
+				intensity += tmp;
+		}
 	}
 	
+	// intensity cannot be greater than 1
 	if (intensity > 1)
 		intensity = 1;
 		
