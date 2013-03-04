@@ -180,6 +180,28 @@ find_first_intersected_bvh_triangle(intersection_point* ip,
     vec3 ray_origin, vec3 ray_direction)
 {
     return 0;
+	int have_hit = 0;
+    intersection_point  ip2;
+    bhv_node current = bhv_root;
+        
+    while (!current.isleaf)
+    {
+    	box_intersect(t_min, t_max, current.bbox, ray_origin, ray_direction, t0,t1);
+    }
+        
+    for (int i=0; i<current.num_triangles; ++i)
+    {
+    	if (ray_intersects_triangle(&ip2, current.triangles[t], ray_origin, ray_direction))
+            {
+                if (ip2.t < t_nearest)
+                {
+                    *ip = ip2;
+                    t_nearest = ip2.t;
+                    have_hit = 1;
+                }
+            }
+    }
+    return have_hit;
 }
 
 // Returns the nearest hit of the given ray with objects in the scene
