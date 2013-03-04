@@ -125,13 +125,14 @@ shade_blinn_phong(intersection_point ip)
 vec3 // TODO: werkt bijna, maar puntjes op spheres zijn terug...
 shade_reflection(intersection_point ip)
 {
-    float refpart;
+    float refpart,zero;
     refpart = 0.25;
+   	zero = 0.0001;
     
     vec3 ray, color;
 
     ray = v3_subtract( v3_multiply(ip.n, 2 * v3_dotprod(ip.i, ip.n)), ip.i);
-    color = ray_color( ip.ray_level+1, ip.p, ray);
+    color = ray_color( ip.ray_level+1, v3_add(ip.p,v3_multiply(ip.n,zero)), ray);
     
     
     return v3_add(
