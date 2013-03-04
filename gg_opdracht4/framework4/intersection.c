@@ -179,19 +179,29 @@ static int
 find_first_intersected_bvh_triangle(intersection_point* ip,
     vec3 ray_origin, vec3 ray_direction)
 {
-    return 0;
+    //return 0;
 	int have_hit = 0;
+	
+	float t_min, t_max, t1, t0, t_nearest;
+	t_min = t0 = 0;
+	t_max = t1 = t_nearest = C_INFINITY;
+	
+    
     intersection_point  ip2;
-    bhv_node current = bhv_root;
+    bvh_node *current = bvh_root;
         
-    while (!current.isleaf)
+    while (! current->is_leaf)
     {
-    	box_intersect(t_min, t_max, current.bbox, ray_origin, ray_direction, t0,t1);
+    	printf("workin %f %f\n",t_min,t_max);
+    	if (bbox_intersect(&t_min, &t_max, inner_node_left_child(current)->bbox, ray_origin, ray_direction, t0,t1) )
+    		current = inner_node_left_child(current);
+    	else if (bbox_intersect(&t_min, &t_max, inner_node_right_child(current)->bbox, ray_origin, ray_direction, t0,t1) )
+    		current = inner_node_right_child(current);
     }
         
-    for (int i=0; i<current.num_triangles; ++i)
+    for (int i=0; i<leaf_node_num_triangles(current); ++i)
     {
-    	if (ray_intersects_triangle(&ip2, current.triangles[t], ray_origin, ray_direction))
+    	if (ray_intersects_triangle(&ip2, leaf_node_triangles(current)[i], ray_origin, ray_direction))
             {
                 if (ip2.t < t_nearest)
                 {
