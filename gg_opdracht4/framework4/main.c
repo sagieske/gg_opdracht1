@@ -187,39 +187,52 @@ ray_trace(void)
     // ...
     // ...
     // ...
-
+	float is[4] = {-.25, .25,-.25, .25};
+	float js[4] = { .25, .25,-.25,-.25};
 
 	float tempi, tempj;
-
     // Loop over all pixels in the framebuffer
-    for (j = 0; j < framebuffer_height; j++)
-    {
-        for (i = 0; i < framebuffer_width; i++)
-        {
-            // ...
-            // ...
-            // ...
+	for (j = 0; j < framebuffer_height; j++)
+	{
+	    for (i = 0; i < framebuffer_width; i++)
+	    {
+	        
+			if (do_antialiasing)
+			{
+				color = v3_create(0,0,0);
+				for (int a=0; a<4; ++a)
+				{
+					tempi = -image_plane_width /2 + (i+is[a])*image_plane_width /framebuffer_width;
+					tempj =  image_plane_height/2 - (j+js[a])*image_plane_height/framebuffer_height;
 
-			// TODO: calculating what?
+	        		colortemp = v3_add(forward_vector, 
+									v3_add( 
+										v3_multiply(right_vector, tempi),
+										v3_multiply(up_vector, tempj)));
+					color = v3_add(color,ray_color(0, scene_camera_position, colortemp));
+				}
+				color = v3_multiply(color,0.25);
+			}
+			else
+			{
 			tempi = -image_plane_width /2 + i*image_plane_width /framebuffer_width;
 			tempj =  image_plane_height/2 - j*image_plane_height/framebuffer_height;
 
-			//TODO: HOW??
-            colortemp = v3_add(forward_vector, 
+	        colortemp = v3_add(forward_vector, 
 						v3_add( 
 							v3_multiply(right_vector, tempi),
 							v3_multiply(up_vector, tempj)));
-				
+			
 			// Ray trace
 			color = ray_color(0, scene_camera_position, colortemp);
+			}
+	        // Output pixel color
+	        put_pixel(i, j, color.x, color.y, color.z);
+	    }
 
-            // Output pixel color
-            put_pixel(i, j, color.x, color.y, color.z);
-        }
-
-        sprintf(buf, "Ray-tracing ::: %.0f%% done", 100.0*j/framebuffer_height);
-        glutSetWindowTitle(buf);
-    }
+	    sprintf(buf, "Ray-tracing ::: %.0f%% done", 100.0*j/framebuffer_height);
+	    glutSetWindowTitle(buf);
+	}
 
     // Done!
     gettimeofday(&t1, NULL);
