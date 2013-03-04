@@ -192,11 +192,12 @@ find_first_intersected_bvh_triangle(intersection_point* ip,
         
     while (! current->is_leaf)
     {
-    	printf("workin %f %f\n",t_min,t_max);
     	if (bbox_intersect(&t_min, &t_max, inner_node_left_child(current)->bbox, ray_origin, ray_direction, t0,t1) )
     		current = inner_node_left_child(current);
     	else if (bbox_intersect(&t_min, &t_max, inner_node_right_child(current)->bbox, ray_origin, ray_direction, t0,t1) )
     		current = inner_node_right_child(current);
+    	else
+    		return 0;
     }
         
     for (int i=0; i<leaf_node_num_triangles(current); ++i)
