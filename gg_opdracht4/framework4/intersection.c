@@ -176,6 +176,52 @@ ray_intersects_sphere(intersection_point* ip, sphere sph,
 // Returns 0 if there are no intersections
 
 static int
+find_recursive(intersection_point* ip,
+	vec3 ray_origin, vec3 ray_direction, bvh_node* node)
+{
+	if (node->is_leaf)
+	{
+		int have_hit = 0;
+		intersection_point ip2;
+		float t_nearest = C_INFINITY;
+		
+		for (int i=0; i<leaf_node_num_triangles(node); ++i)
+		{
+			if (ray_intersects_triangle(&ip2, leaf_node_triangles(node)[i], ray_origin, ray_direction))
+			    {
+			        if (ip2.t < t_nearest)
+			        {
+			            *ip = ip2;
+			            t_nearest = ip2.t;
+			            have_hit = 1;
+			        }
+			    }
+		}
+		return have_hit;
+	}
+	else
+	{
+		float t_min, t_max;
+		t_min = 0;
+		t_max = C_INFINITY;
+		
+		if (bbox_intersect(&t_min, &t_max, inner_node_right_child(node)->bbox, ray_origin, ray_direction, t_min,t_max) 
+			&& find_recursive(ip,ray_origin,ray_direction,inner_node_right_child(node) )  );
+		else if (bbox_intersect(&t_min, &t_max, inner_node_left_child(node)->bbox, ray_origin, ray_direction, t_min,t_max) 
+			&& find_recursive(ip,ray_origin,ray_direction,inner_node_left_child(node) )  );
+		else
+			return 0;
+	}
+}
+
+static int
+find_first_intersected_bvh_triangle(intersection_point* ip,
+	vec3 ray_origin, vec3 ray_direction)
+{
+	return find_recursive(ip, ray_origin, ray_direction, bvh_root);
+}
+/*
+static int
 find_first_intersected_bvh_triangle(intersection_point* ip,
     vec3 ray_origin, vec3 ray_direction)
 {
@@ -186,34 +232,45 @@ find_first_intersected_bvh_triangle(intersection_point* ip,
 	t_min = t0 = 0;
 	t_max = t1 = t_nearest = C_INFINITY;
 	
-    
+	int t_left[16] = {0};
+	
+	
     intersection_point  ip2;
     bvh_node *current = bvh_root;
-        
+    
+    while (1)
+    {
+    int depth = 0;
     while (! current->is_leaf)
     {
-    	if (bbox_intersect(&t_min, &t_max, inner_node_left_child(current)->bbox, ray_origin, ray_direction, t0,t1) )
-    		current = inner_node_left_child(current);
-    	else if (bbox_intersect(&t_min, &t_max, inner_node_right_child(current)->bbox, ray_origin, ray_direction, t0,t1) )
+    	if ( !t_left[depth] && bbox_intersect(&t_min, &t_max, inner_node_right_child(current)->bbox, ray_origin, ray_direction, t0,t1) )
     		current = inner_node_right_child(current);
+    	else if (bbox_intersect(&t_min, &t_max, inner_node_left_child(current)->bbox, ray_origin, ray_direction, t0,t1) )
+    		current = inner_node_left_child(current);
     	else
     		return 0;
+    	++depth;
     }
-        
-    for (int i=0; i<leaf_node_num_triangles(current); ++i)
-    {
-    	if (ray_intersects_triangle(&ip2, leaf_node_triangles(current)[i], ray_origin, ray_direction))
-            {
-                if (ip2.t < t_nearest)
-                {
-                    *ip = ip2;
-                    t_nearest = ip2.t;
-                    have_hit = 1;
-                }
-            }
-    }
-    return have_hit;
-}
+    
+	for (int i=0; i<leaf_node_num_triangles(current); ++i)
+	{
+		if (ray_intersects_triangle(&ip2, leaf_node_triangles(current)[i], ray_origin, ray_direction))
+	        {
+	            if (ip2.t < t_nearest)
+	            {
+	                *ip = ip2;
+	                t_nearest = ip2.t;
+	                have_hit = 1;
+	            }
+	        }
+	}
+	if (have_hit )
+		break;
+	t_left[depth] = 1;
+	
+   	}
+	return have_hit;
+}*/
 
 // Returns the nearest hit of the given ray with objects in the scene
 // (either a sphere or a triangle).
