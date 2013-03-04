@@ -201,13 +201,13 @@ find_recursive(intersection_point* ip,
 	}
 	else
 	{
-		float t_min, t_max;
-		t_min = 0;
-		t_max = C_INFINITY;
+		float t_min, t_max, t0, t1;
+		t_min = t0 = 0;
+		t_max = t1 = C_INFINITY;
 		
-		if (bbox_intersect(&t_min, &t_max, inner_node_right_child(node)->bbox, ray_origin, ray_direction, t_min,t_max) 
+		if (bbox_intersect(&t_min, &t_max, inner_node_right_child(node)->bbox, ray_origin, ray_direction, t0,t1) 
 			&& find_recursive(ip,ray_origin,ray_direction,inner_node_right_child(node) )  );
-		else if (bbox_intersect(&t_min, &t_max, inner_node_left_child(node)->bbox, ray_origin, ray_direction, t_min,t_max) 
+		else if (bbox_intersect(&t_min, &t_max, inner_node_left_child(node)->bbox, ray_origin, ray_direction, t0,t1) 
 			&& find_recursive(ip,ray_origin,ray_direction,inner_node_left_child(node) )  );
 		else
 			return 0;
