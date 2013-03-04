@@ -135,7 +135,7 @@ shade_reflection(intersection_point ip)
     
     
     return v3_add(
-    		v3_multiply(shade_blinn_phong(ip), 1.0 - refpart),
+    		v3_multiply(shade_matte(ip), 1.0 - refpart),
     		v3_multiply(color,refpart));
 }
 
