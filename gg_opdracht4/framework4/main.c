@@ -221,8 +221,8 @@ ray_trace(void)
 			else
 			{
 				// calculate distance from origin
-				tempi = -image_plane_width /2 + i*image_plane_width /framebuffer_width;
-				tempj =  image_plane_height/2 - j*image_plane_height/framebuffer_height;
+				tempi = -image_plane_width /2 + (i+0.5)*image_plane_width /framebuffer_width;
+				tempj =  image_plane_height/2 - (j+0.5)*image_plane_height/framebuffer_height;
 
 				// calculate colorvector for position by addition of vectors
 			    colortemp = v3_add(forward_vector, 
