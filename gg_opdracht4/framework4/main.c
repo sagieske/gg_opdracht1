@@ -184,13 +184,12 @@ ray_trace(void)
     image_plane_height = 2.0 * tan(0.5*VFOV/180*M_PI);
     image_plane_width = image_plane_height * (1.0 * framebuffer_width / framebuffer_height);
 
-    // ...
-    // ...
-    // ...
+    // Floats for pixeldivision for aliasing
 	float is[4] = {-.25, .25,-.25, .25};
 	float js[4] = { .25, .25,-.25,-.25};
 
 	float tempi, tempj;
+
     // Loop over all pixels in the framebuffer
 	for (j = 0; j < framebuffer_height; j++)
 	{
@@ -200,31 +199,39 @@ ray_trace(void)
 			if (do_antialiasing)
 			{
 				color = v3_create(0,0,0);
+				// for each 1/4 of pixel, calculate each colorvector and sum up. Then take average
+				
 				for (int a=0; a<4; ++a)
 				{
+					// calculate distance from origin
 					tempi = -image_plane_width /2 + (i+is[a])*image_plane_width /framebuffer_width;
 					tempj =  image_plane_height/2 - (j+js[a])*image_plane_height/framebuffer_height;
 
+					// calculate colorvector for position by addition of vectors
 	        		colortemp = v3_add(forward_vector, 
 									v3_add( 
 										v3_multiply(right_vector, tempi),
 										v3_multiply(up_vector, tempj)));
+					// ray trace
 					color = v3_add(color,ray_color(0, scene_camera_position, colortemp));
 				}
+				// take average of colorvectors on pixel
 				color = v3_multiply(color,0.25);
 			}
 			else
 			{
-			tempi = -image_plane_width /2 + i*image_plane_width /framebuffer_width;
-			tempj =  image_plane_height/2 - j*image_plane_height/framebuffer_height;
+				// calculate distance from origin
+				tempi = -image_plane_width /2 + i*image_plane_width /framebuffer_width;
+				tempj =  image_plane_height/2 - j*image_plane_height/framebuffer_height;
 
-	        colortemp = v3_add(forward_vector, 
-						v3_add( 
-							v3_multiply(right_vector, tempi),
-							v3_multiply(up_vector, tempj)));
+				// calculate colorvector for position by addition of vectors
+			    colortemp = v3_add(forward_vector, 
+							v3_add( 
+								v3_multiply(right_vector, tempi),
+								v3_multiply(up_vector, tempj)));
 			
-			// Ray trace
-			color = ray_color(0, scene_camera_position, colortemp);
+				// Ray trace
+				color = ray_color(0, scene_camera_position, colortemp);
 			}
 	        // Output pixel color
 	        put_pixel(i, j, color.x, color.y, color.z);
@@ -551,6 +558,7 @@ key_pressed(unsigned char key, int x, int y)
         {
             // Toggle anti-aliasing (forces immediate re-render)
             do_antialiasing = 1 - do_antialiasing;
+            printf("do_antialiasing set to %d\n", do_antialiasing);
             needs_rerender = 1;
             glutPostRedisplay();
             break;

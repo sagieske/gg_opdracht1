@@ -179,14 +179,18 @@ static int
 find_recursive(intersection_point* ip,
 	vec3 ray_origin, vec3 ray_direction, bvh_node* node)
 {
+
+	// Check at leaves for intersections
 	if (node->is_leaf)
 	{
 		int have_hit = 0;
 		intersection_point ip2;
 		float t_nearest = C_INFINITY;
 		
+		// Check all triangles if intersects with ray
 		for (int i=0; i<leaf_node_num_triangles(node); ++i)
 		{
+			// If intersection with triangle, save ip if nearest to ray
 			if (ray_intersects_triangle(&ip2, leaf_node_triangles(node)[i], ray_origin, ray_direction))
 			    {
 			        if (ip2.t < t_nearest)
@@ -199,12 +203,14 @@ find_recursive(intersection_point* ip,
 		}
 		return have_hit;
 	}
+	// Go through children
 	else
 	{
 		float t_min, t_max, t0, t1;
 		t_min = t0 = 0;
 		t_max = t1 = C_INFINITY;
 		
+		// Recursively go through children
 		if (bbox_intersect(&t_min, &t_max, inner_node_right_child(node)->bbox, ray_origin, ray_direction, t0,t1) 
 			&& find_recursive(ip,ray_origin,ray_direction,inner_node_right_child(node) )  );
 		else if (bbox_intersect(&t_min, &t_max, inner_node_left_child(node)->bbox, ray_origin, ray_direction, t0,t1) 
