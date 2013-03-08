@@ -177,7 +177,7 @@ ray_intersects_sphere(intersection_point* ip, sphere sph,
 
 static int
 find_recursive(intersection_point* ip,
-	vec3 ray_origin, vec3 ray_direction, bvh_node* node)
+	vec3 ray_origin, vec3 ray_direction, bvh_node* node, float min, float max)
 {
 
 	// Check at leaves for intersections
@@ -186,7 +186,7 @@ find_recursive(intersection_point* ip,
 		int have_hit = 0;
 		intersection_point ip2;
 		float t_nearest = C_INFINITY;
-
+		
 		// Check all triangles if intersects with ray
 		for (int i=0; i<leaf_node_num_triangles(node); ++i)
 		{
@@ -206,18 +206,27 @@ find_recursive(intersection_point* ip,
 	// Go through children
 	else
 	{
-		float min, max, t0, t1;
-		min = t0 = 0;
-		max = t1 = C_INFINITY;
+		int left=0,right=0;
+		float r_min, r_max, l_min, l_max, t0, t1;
+		r_min = l_min = t0 = 0;
+		r_max = l_max = t1 = C_INFINITY;
 		
 		// Recursively go through children
-
-		if (bbox_intersect(&min, &max, inner_node_right_child(node)->bbox, ray_origin, ray_direction, t0,t1)
-			&& find_recursive(ip,ray_origin,ray_direction,inner_node_right_child(node) )  );
-		else if (bbox_intersect(&min, &max, inner_node_left_child(node)->bbox, ray_origin, ray_direction, t0,t1)
-			&& find_recursive(ip,ray_origin,ray_direction,inner_node_left_child(node) )  );
-		else return 0;
-
+		right = bbox_intersect(&r_min, &r_max, inner_node_right_child(node)->bbox, ray_origin, ray_direction, min,max);
+		left  = bbox_intersect(&l_min, &l_max, inner_node_left_child(node)->bbox, ray_origin, ray_direction, min,max);
+		
+		if (r_min <= l_min )
+		{ 
+			if (right &&find_recursive(ip,ray_origin,ray_direction,inner_node_right_child(node) ,r_min,r_max)  );
+			else if (left && find_recursive(ip,ray_origin,ray_direction,inner_node_left_child(node) ,l_min,l_max)  );
+			else return 0;
+		}
+		else
+		{ 
+			if (left && find_recursive(ip,ray_origin,ray_direction,inner_node_left_child(node) ,l_min,l_max)  );
+			else if (right && find_recursive(ip,ray_origin,ray_direction,inner_node_right_child(node) ,r_min,r_max)  );
+			else return 0;
+		}
 	}
 }
 
@@ -225,7 +234,7 @@ static int
 find_first_intersected_bvh_triangle(intersection_point* ip,
 	vec3 ray_origin, vec3 ray_direction)
 {
-	return find_recursive(ip, ray_origin, ray_direction, bvh_root);
+	return find_recursive(ip, ray_origin, ray_direction, bvh_root, 0, C_INFINITY);
 }
 
 

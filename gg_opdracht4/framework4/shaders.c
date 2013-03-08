@@ -73,7 +73,7 @@ vec3
 shade_blinn_phong(intersection_point ip)
 {
 	// constants
-	float kd, ks, alpha,zero;
+	float kd, ks, alpha,zero, col1, col2;
 	kd = 0.8;
 	ks = 0.5;
 	alpha = 50;
@@ -117,12 +117,22 @@ shade_blinn_phong(intersection_point ip)
 		}
 	}
 	
+	// set components
+	col1 = (scene_ambient_light + kd * intensity);
+	col2 =  ks * highlight;
+	// check overflow
+	if (col1 > 1) 
+		col1 = 1;
+	if (col1 + col2 > 1) 
+		col2 = 1 - col1;
+	
 	return v3_add(
-					v3_multiply(cd, (scene_ambient_light + kd * intensity) ),
-					v3_multiply(cs, ks * highlight) );
+					v3_multiply(cd, p1 ),
+					v3_multiply(cs, p2) );
+	
 }
 
-vec3 // TODO: werkt bijna, maar puntjes op spheres zijn terug...
+vec3
 shade_reflection(intersection_point ip)
 {
     float refpart,zero;
