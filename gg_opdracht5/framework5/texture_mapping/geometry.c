@@ -37,9 +37,14 @@ setSpherePoint(vec3 *p, vec3* n, vec3* t, int latitude, int longitude,
     p->y = oy + sin(latitude * dToR) * sy;
     p->z = oz + cos(longitude * dToR) * cos(latitude * dToR) * sz;
 
+	
+		
     // Set texture coordinate
-    t->x = 0.0;
-    t->y = 0.0;
+    //t->x = 0.0;
+    //t->y = 0.0;
+	// TODO: coordinates not right yet!
+	t->x = (atan2(p->y - oy, p->x -ox))/ (2*M_PI);
+	t->y = ( M_PI - (acos((p->z - oz) / sy) )) / M_PI;
 
     // calculate normal, this actually doesn't take the sphere size
     // per axis into account, but should still be usable
@@ -102,9 +107,14 @@ setHemispherePoint(vec3 *p, vec3* n, vec3* t, int latitude, int longitude,
     p->y = oy + sin(latitude * dToR) * s;
     p->z = oz + cos(longitude * dToR) * cos(latitude * dToR) * s;
 
-    // Set texture coordinate
-    t->x = 0.0;
-    t->y = 0.0;
+    // Set texture coordinate 
+	// TODO: coordinates not right yet!
+
+	t->x = (atan2(p->y - oy, p->x -ox))/ (2*M_PI);
+	t->y = ( M_PI - (acos((p->z - oz) / s) )) / M_PI;
+
+    //t->x = 0.0;
+    //t->y = 0.0;
 
     // calculate normal
     n->x = p->x - ox;
@@ -198,7 +208,12 @@ createCylinder(polys * list, double radius, double height,
             p.normal[i].z /= len;
 
             // Set texture coordinate
-            p.tcoord[i].x = p.tcoord[i].y = 0.0;
+			// TODO: coordinates not right yet!
+			//p.tcoord[i].x = ((longitude +10) * dToR)/ (2*M_PI);
+			//p.tcoord[i].y = ( M_PI - (longitude *dToR) ) / M_PI;
+			//t->x = (atan2(p->y - oy, p->x -ox))/ (2*M_PI);
+			//t->y = ( M_PI - (acos((p->z - oz) / s) )) / M_PI;
+            p.tcoord[i].x =p.tcoord[i].y = 0.0;
         }
 
         AddPolyToPolylist(list, p);
