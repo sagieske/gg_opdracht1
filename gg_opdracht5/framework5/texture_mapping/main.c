@@ -4,10 +4,10 @@
  * Description ..... Creates OpenGL window and draws the scene.
  * Created by ...... Paul Melis, Robert Belleman, Jurgen Sturm
  *
- * Student name ....
- * Student email ...
- * Collegekaart ....
- * Date ............
+ * Student name .... Sharon Gieske & Ysbrand Galama
+ * Student email ... sharongieske@gmail.com & y.galama@hotmail.com
+ * Collegekaart .... 6167667 & 10262067
+ * Date ............ 14/03/2013
  * Comments ........
  *
  * (always fill in these fields before submitting!!)
@@ -309,10 +309,16 @@ DrawPolylist(polys * list)
         // Make the correct texture active
         glBindTexture(GL_TEXTURE_2D, p.texture_id);
 
+		// repeat texture
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
         glBegin(GL_POLYGON);
         for (j = 0; j < p.points; j++)
         {
+
             glNormal3f(p.normal[j].x, p.normal[j].y, p.normal[j].z);
+			glTexCoord2f(p.tcoord[j].x, p.tcoord[j].y);
             glVertex3f(p.pts[j].x, p.pts[j].y, p.pts[j].z);
         }
         glEnd();
