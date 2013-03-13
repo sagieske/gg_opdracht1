@@ -263,8 +263,14 @@ InitGL(void)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glCheckError("glTexParameteri");
 
-            glTexImage2D(GL_TEXTURE_2D, 0, texture_internal_format,
-                width, height, 0, texture_format, texture_type, image_data);
+            /*glTexImage2D(GL_TEXTURE_2D, 0, texture_internal_format,
+               width, height, 0, texture_format, texture_type, image_data);*/
+			// Use MipMapping
+			gluBuild2DMipmaps(GL_TEXTURE_2D, texture_internal_format,
+            	width, height,texture_format, texture_type, image_data);
+			// use weighted average of two mipmaps that match size of pixeled texture most closely.
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
             glCheckError("glTexImage2D");
 
             // Free the image data, as OpenGL will have made its internal copy by now
