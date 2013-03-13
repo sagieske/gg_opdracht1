@@ -1,9 +1,9 @@
 /* Computer Graphics, Assignment, Volume rendering with cubes/points/isosurface
  *
- * Student name ....
- * Student email ...
- * Collegekaart ....
- * Date ............
+ * Student name .... Sharon Gieske & Ysbrand Galama
+ * Student email ... sharongieske@gmail.com & y.galama@hotmail.com
+ * Collegekaart .... 6167667 & 10262067
+ * Date ............ 14/03/2013
  * Comments ........
  *
  * (always fill in these fields before submitting!!)
@@ -37,7 +37,9 @@ voxel2idx(int i, int j, int k)
 cell
 get_cell(int i, int j, int k)
 {
-    cell c;
+	// Get index from voxel
+	int index =voxel2idx(i,j,k);
+    cell c = volume[index];
     return c;
 }
 
