@@ -38,8 +38,13 @@ cell
 get_cell(int i, int j, int k)
 {
 	// Get index from voxel
-	int index =voxel2idx(i,j,k);
-    cell c = volume[index];
+	//int index = voxel2idx(i,j,k);
+    cell c;// = volume[index];
+    int is[8] = {0,0,0,0,1,1,1,1};
+    int js[8] = {0,0,1,1,0,0,1,1};
+    int ks[8] = {0,1,0,1,0,1,0,1};
+    for (int q=0; q < 8; ++q)
+    	c.p[i] = v3_create(i+is[i],j+js[i],k+ks[i]);
     return c;
 }
 
