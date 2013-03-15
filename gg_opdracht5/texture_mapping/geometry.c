@@ -115,30 +115,11 @@ setHemispherePoint(vec3 *p, vec3* n, vec3* t, int latitude, int longitude,
     p->z = oz + cos(longitude * dToR) * cos(latitude * dToR) * s;
 
     // Set texture coordinate 
-	// TODO: coordinates not right yet!
 	theta = atan2(p->z - oz, p->x -ox);
 	phi = acos((p->y - oy) / s);
-	t->y = -(phi)/ (2*M_PI);
-	t->x = ( M_PI - theta) / M_PI;
-	//theta = acos(n->z);
-	//phi = atan2(n->y, n->z);
-
-	//t->x = theta/ (2*M_PI);
-	//t->y = ( M_PI - phi) / M_PI;
-
-	/*
-	phi = acos((p->z - oz) /s);
-	theta = atan2(p->y-oy,p->x-ox);
 	
-	p->x = ox + s*cos(phi)*sin(theta);
-	p->y = oy + s*sin(phi)*sin(theta);
-	p->z = oz + s*cos(phi);
-	
-	t->x = phi/2/M_PI;
-	t->y = (M_PI-theta)/M_PI;*/
-	
-    //t->x = 0.0;
-    //t->y = 0.0;
+	t->y = -(phi)/ (0.5*M_PI);
+	t->x = ( M_PI - theta) / M_PI /2;
 
     // calculate normal
     n->x = p->x - ox;
@@ -232,12 +213,8 @@ createCylinder(polys * list, double radius, double height,
             p.normal[i].z /= len;
 
             // Set texture coordinate
-			// TODO: coordinates not right yet!
-			//p.tcoord[i].x = ((longitude +10) * dToR)/ (2*M_PI);
-			//p.tcoord[i].y = ( M_PI - (longitude *dToR) ) / M_PI;
-			//t->x = (atan2(p->y - oy, p->x -ox))/ (2*M_PI);
-			//t->y = ( M_PI - (acos((p->z - oz) / s) )) / M_PI;
-            p.tcoord[i].x =p.tcoord[i].y = 0.0;
+			p.tcoord[i].x = (atan2(p.pts[i].y - oy, p.pts[i].x - ox))/ (2*M_PI);
+			p.tcoord[i].y = ( M_PI - (acos((p.pts[i].z - oz) / radius) )) / M_PI;
         }
 
         AddPolyToPolylist(list, p);
