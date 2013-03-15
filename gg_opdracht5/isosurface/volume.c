@@ -37,14 +37,21 @@ voxel2idx(int i, int j, int k)
 cell
 get_cell(int i, int j, int k)
 {
-	// Get index from voxel
-	//int index = voxel2idx(i,j,k);
-    cell c;// = volume[index];
+    cell c;
+	// create indices for cell
     int is[8] = {0,0,0,0,1,1,1,1};
     int js[8] = {0,0,1,1,0,0,1,1};
     int ks[8] = {0,1,0,1,0,1,0,1};
-    for (int q=0; q < 8; ++q)
+
+	// loop to create vectors for each datapoint in cel
+    for (int q=0; q < 8; ++q){
+		int index = voxel2idx(i+is[i],j+js[i],k+ks[i]);
+		// create vector
     	c.p[i] = v3_create(i+is[i],j+js[i],k+ks[i]);
+		// add value
+		c.value[i] = volume[index];
+	}
+
     return c;
 }
 
