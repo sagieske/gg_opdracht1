@@ -46,7 +46,7 @@ struct texture_data texture_files[] =
     { "textures/roof2.ppm", 0 },
     { "textures/wall3.ppm", 0 },
     { "textures/wood.ppm", 0 },
-    { "textures/skyTest.ppm", 0 },
+    { "textures/sky.ppm", 0 },
     { "textures/road.ppm", 0 },
     { "textures/banana_leaf2.ppm", 1 },
     { NULL, 0 },
@@ -135,9 +135,11 @@ InitializePolygonlists(void)
 
     // A single tree object
     polylistTreeLeafs = CreatePolylist(10);
-    createSphere(polylistTreeLeafs, 0.7, 0.7, 0.7,  0, 1.7, 0,  0, 1, 0);
-    for (i = 0; i < polylistTreeLeafs->length; i++)
-        polylistTreeLeafs->items[i].texture_id = texture_names[6];
+    loadPolygonalObject(polylistTreeLeafs, "leaf.obj", texture_names, 1.0,
+        object_positions[0].x, object_positions[0].y, object_positions[0].z);
+    //createSphere(polylistTreeLeafs, 0.7, 0.7, 0.7,  0, 1.7, 0,  0, 1, 0);
+    //for (i = 0; i < polylistTreeLeafs->length; i++)
+        //polylistTreeLeafs->items[i].texture_id = texture_names[6];
 
     polylistTreeStem = CreatePolylist(10);
     createCylinder(polylistTreeStem, 0.075, 1.8,  0, 0, 0,  0.5, 0.3, 0);
