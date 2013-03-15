@@ -46,7 +46,7 @@ struct texture_data texture_files[] =
     { "textures/roof2.ppm", 0 },
     { "textures/wall3.ppm", 0 },
     { "textures/wood.ppm", 0 },
-    { "textures/sky.ppm", 0 },
+    { "textures/skyTest.ppm", 0 },
     { "textures/road.ppm", 0 },
     { "textures/banana_leaf2.ppm", 1 },
     { NULL, 0 },

@@ -38,7 +38,7 @@ setSpherePoint(vec3 *p, vec3* n, vec3* t, int latitude, int longitude,
     p->y = oy + sin(latitude * dToR) * sy;
     p->z = oz + cos(longitude * dToR) * cos(latitude * dToR) * sz;
 
-	
+	//printf("%f %f %f\n",p->x,p->y,p->z);
 		
     // Set texture coordinate
     //t->x = 0.0;
@@ -116,15 +116,27 @@ setHemispherePoint(vec3 *p, vec3* n, vec3* t, int latitude, int longitude,
 
     // Set texture coordinate 
 	// TODO: coordinates not right yet!
-	t->x = (atan2(p->y - oy, p->x -ox))/ (2*M_PI);
-	t->y = ( M_PI - (acos((p->z - oz) / s) )) / M_PI;
+	theta = atan2(p->z - oz, p->x -ox);
+	phi = acos((p->y - oy) / s);
+	t->y = -(phi)/ (2*M_PI);
+	t->x = ( M_PI - theta) / M_PI;
 	//theta = acos(n->z);
 	//phi = atan2(n->y, n->z);
 
 	//t->x = theta/ (2*M_PI);
 	//t->y = ( M_PI - phi) / M_PI;
 
-
+	/*
+	phi = acos((p->z - oz) /s);
+	theta = atan2(p->y-oy,p->x-ox);
+	
+	p->x = ox + s*cos(phi)*sin(theta);
+	p->y = oy + s*sin(phi)*sin(theta);
+	p->z = oz + s*cos(phi);
+	
+	t->x = phi/2/M_PI;
+	t->y = (M_PI-theta)/M_PI;*/
+	
     //t->x = 0.0;
     //t->y = 0.0;
 
