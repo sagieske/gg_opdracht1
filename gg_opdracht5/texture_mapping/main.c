@@ -135,8 +135,8 @@ InitializePolygonlists(void)
 
     // A single tree object
     polylistTreeLeafs = CreatePolylist(10);
-    loadPolygonalObject(polylistTreeLeafs, "leaf.obj", texture_names, 1.0,
-        object_positions[0].x, object_positions[0].y, object_positions[0].z);
+    for (i = 0; i < 8; i++)
+	    loadPolygonalObject(polylistTreeLeafs, "leaf.obj", texture_names, 0.4, 0, 1.8, 0);
     //createSphere(polylistTreeLeafs, 0.7, 0.7, 0.7,  0, 1.7, 0,  0, 1, 0);
     //for (i = 0; i < polylistTreeLeafs->length; i++)
         //polylistTreeLeafs->items[i].texture_id = texture_names[6];
