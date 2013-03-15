@@ -115,11 +115,12 @@ setHemispherePoint(vec3 *p, vec3* n, vec3* t, int latitude, int longitude,
     p->z = oz + cos(longitude * dToR) * cos(latitude * dToR) * s;
 
     // Set texture coordinate 
+	// TODO: Strange glitch!
 	theta = atan2(p->z - oz, p->x -ox);
 	phi = acos((p->y - oy) / s);
 	
 	t->y = -(phi)/ (0.5*M_PI);
-	t->x = ( M_PI - theta) / M_PI /2;
+	t->x = ( M_PI - theta) / M_PI;
 
     // calculate normal
     n->x = p->x - ox;
