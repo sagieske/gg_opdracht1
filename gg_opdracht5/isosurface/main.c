@@ -225,6 +225,24 @@ void DrawVolumeAsIsosurface(void)
 
 void FillArrayWithIsosurface(void)
 {
+	int i, j, k;
+    int idx;
+    cell c;
+    triangle triangles[1000];//[MAX_VERTICES_IN_ARRAY];
+
+    //TODO: nu een segmentationfault na 8 voor k, wtf
+    for (k = 0; k < nz; k++)
+    {
+        for (j = 0; j < ny; j++)
+        {
+            for (i = 0; i < nx; i++)
+            {
+                printf("%d,%d,%d\n",i,j,k);
+                c = get_cell(i,j,k);
+                num_vertices_in_array += generate_cell_triangles(triangles,c,isovalue);
+            }
+        }
+    }
 }
 
 void DrawScene(void)
