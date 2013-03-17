@@ -255,6 +255,16 @@ void FillArrayWithIsosurface(void)
                 int celltri, l;
                 triangle *triangles = malloc(6*2*sizeof(triangle));
                 c = get_cell(i, j, k);
+                if (k==-1 && j==5 && i==10)
+                	printf("\n(%.0f,%.0f,%.0f):(%.0f,%.0f,%.0f):\n(%.0f,%.0f,%.0f):(%.0f,%.0f,%.0f):\n(%.0f,%.0f,%.0f):(%.0f,%.0f,%.0f):\n(%.0f,%.0f,%.0f):(%.0f,%.0f,%.0f)\n",
+                	c.p[0].x,c.p[0].y,c.p[0].z,
+                	c.p[1].x,c.p[1].y,c.p[1].z,
+                	c.p[2].x,c.p[2].y,c.p[2].z,
+                	c.p[3].x,c.p[3].y,c.p[3].z,
+                	c.p[4].x,c.p[4].y,c.p[4].z,
+                	c.p[5].x,c.p[5].y,c.p[5].z,
+                	c.p[6].x,c.p[6].y,c.p[6].z,
+                	c.p[7].x,c.p[7].y,c.p[7].z);
                 // AddVertexToArray(vec3 v, vec3 n)
                 //generate_cell_triangles(triangle *triangles, cell c, unsigned char isovalue);
                 celltri = generate_cell_triangles(triangles, c, isovalue);

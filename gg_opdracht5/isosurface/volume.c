@@ -39,16 +39,16 @@ get_cell(int i, int j, int k)
 {
     cell c;
 	// create indices for cell
-    int ks[8] = {0,0,0,0,1,1,1,1};
-    int js[8] = {0,0,1,1,0,0,1,1};
     int is[8] = {0,1,0,1,0,1,0,1};
+    int js[8] = {0,0,1,1,0,0,1,1};
+    int ks[8] = {0,0,0,0,1,1,1,1};
 
 	// loop to create vectors for each datapoint in cel
     for (int q=0; q < 8; ++q){
 		// add value
-		c.value[i] = voxel2idx(i+is[i],j+js[i],k+ks[i]);
+		c.value[q] = volume[voxel2idx(i+is[q],j+js[q],k+ks[q])];
 		// create vector
-    	c.p[i] = v3_create(i+is[i],j+js[i],k+ks[i]);
+    	c.p[q] = v3_create(i+is[q],j+js[q],k+ks[q]);
 	}
 
     return c;
