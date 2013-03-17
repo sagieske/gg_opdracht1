@@ -149,10 +149,15 @@ generate_cell_triangles(triangle *triangles, cell c, unsigned char isovalue)
 	int a[6] = {1, 2, 4, 1, 2, 4};
 	int b[6] = {3, 6, 5, 5, 3, 6};
 
-	// Loop through all 6 possible tetrahedron
-	for(int i = 0; i < 6; i++){
-		nr_triangles += generate_tetrahedron_triangles(&triangles[nr_triangles], isovalue, c, 0, a[i], b[i], 7);
-	}
+	//TODO: Waarom werkt loopen niet???
+	// Go through all 6 possible tetrahedron
+		nr_triangles += generate_tetrahedron_triangles(&triangles[nr_triangles], isovalue, c, 0, a[0], b[0], 7);
+		nr_triangles += generate_tetrahedron_triangles(&triangles[nr_triangles], isovalue, c, 0, a[1], b[1], 7);
+		nr_triangles += generate_tetrahedron_triangles(&triangles[nr_triangles], isovalue, c, 0, a[2], b[2], 7);
+		nr_triangles += generate_tetrahedron_triangles(&triangles[nr_triangles], isovalue, c, 0, a[3], b[3], 7);
+		nr_triangles += generate_tetrahedron_triangles(&triangles[nr_triangles], isovalue, c, 0, a[4], b[4], 7);
+		nr_triangles += generate_tetrahedron_triangles(&triangles[nr_triangles], isovalue, c, 0, a[5], b[5], 7);
 
-    return nr_triangles;
+	return nr_triangles;
+
 }
