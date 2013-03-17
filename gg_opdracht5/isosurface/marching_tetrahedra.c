@@ -48,7 +48,7 @@ generate_tetrahedron_triangles(triangle *triangles, unsigned char isovalue, cell
 	Thetrahedon is an object consisting of 4 vertices, 6 edges that span 4 faces
 
 	*/
-
+	vec3 normal;
 	int bitvalue[4];
 	// set bitvalues of vertices:
 	if (((int)c.value[v3]) <= isovalue) bitvalue[0] = 0; else bitvalue[0] = 1;
@@ -60,38 +60,61 @@ generate_tetrahedron_triangles(triangle *triangles, unsigned char isovalue, cell
 	// case of 0001 or 1110
 	if(bitvalue[1] == bitvalue[2] && bitvalue[2] == bitvalue[0] && bitvalue[0] != bitvalue[3])
     {
+        // calculate position
         triangles[0].p[0] = interpolate_points(isovalue, c.p[v0], c.p[v1], c.value[v0], c.value[v1]);
         triangles[0].p[1] = interpolate_points(isovalue, c.p[v0], c.p[v2], c.value[v0], c.value[v2]);
         triangles[0].p[2] = interpolate_points(isovalue, c.p[v0], c.p[v3], c.value[v0], c.value[v3]);
-        
-        triangles[0].n[0] = v3_normalize(v3_crossprod(v3_subtract(triangles[0].p[0],triangles[0].p[1]),v3_subtract(triangles[0].p[0],triangles[0].p[2])));
-        triangles[0].n[1] = v3_normalize(v3_crossprod(v3_subtract(triangles[0].p[1],triangles[0].p[2]),v3_subtract(triangles[0].p[1],triangles[0].p[0])));
-        triangles[0].n[2] = v3_normalize(v3_crossprod(v3_subtract(triangles[0].p[2],triangles[0].p[0]),v3_subtract(triangles[0].p[2],triangles[0].p[1])));
-        
+		
+		// calculate normal
+		normal = v3_crossprod(v3_subtract(triangles[0].p[0],triangles[0].p[1]),
+							v3_subtract(triangles[0].p[0],triangles[0].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[0].n[0] = triangles[0].n[1] = triangles[0].n[2] = normal;
         return 1;
     }
 	// case of 0010 or 1101
 	if(bitvalue[0] == bitvalue[1] && bitvalue[1] == bitvalue[3] && bitvalue[0] != bitvalue[2])
     {
+        // calculate position
         triangles[0].p[0] = interpolate_points(isovalue, c.p[v1], c.p[v0], c.value[v1], c.value[v0]);
         triangles[0].p[1] = interpolate_points(isovalue, c.p[v1], c.p[v2], c.value[v1], c.value[v2]);
         triangles[0].p[2] = interpolate_points(isovalue, c.p[v1], c.p[v3], c.value[v1], c.value[v3]);
+        
+        // calculate normal
+        normal = v3_crossprod(v3_subtract(triangles[0].p[0],triangles[0].p[1]),
+							v3_subtract(triangles[0].p[0],triangles[0].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[0].n[0] = triangles[0].n[1] = triangles[0].n[2] = normal;
         return 1;
     }
 	// case of 0100 or 1011
 	if(bitvalue[0] == bitvalue[2] && bitvalue[2] == bitvalue[3] && bitvalue[0] != bitvalue[1])
     {
+        // calculate position
         triangles[0].p[0] = interpolate_points(isovalue, c.p[v2], c.p[v0], c.value[v2], c.value[v0]);
         triangles[0].p[1] = interpolate_points(isovalue, c.p[v2], c.p[v1], c.value[v2], c.value[v1]);
         triangles[0].p[2] = interpolate_points(isovalue, c.p[v2], c.p[v3], c.value[v2], c.value[v3]);
+        
+        // calculate normal
+        normal = v3_crossprod(v3_subtract(triangles[0].p[0],triangles[0].p[1]),
+							v3_subtract(triangles[0].p[0],triangles[0].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[0].n[0] = triangles[0].n[1] = triangles[0].n[2] = normal;
         return 1;
     }
 	// case of 1000 or 0111
 	if(bitvalue[1] == bitvalue[2] && bitvalue[1] == bitvalue[3] && bitvalue[0] != bitvalue[3])
     {
+        // calculate position
         triangles[0].p[0] = interpolate_points(isovalue, c.p[v3], c.p[v0], c.value[v3], c.value[v0]);
         triangles[0].p[1] = interpolate_points(isovalue, c.p[v3], c.p[v1], c.value[v3], c.value[v1]);
         triangles[0].p[2] = interpolate_points(isovalue, c.p[v3], c.p[v2], c.value[v3], c.value[v2]);
+        
+        // calculate normal
+        normal = v3_crossprod(v3_subtract(triangles[0].p[0],triangles[0].p[1]),
+							v3_subtract(triangles[0].p[0],triangles[0].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[0].n[0] = triangles[0].n[1] = triangles[0].n[2] = normal;
         return 1;
     }
 
@@ -99,6 +122,7 @@ generate_tetrahedron_triangles(triangle *triangles, unsigned char isovalue, cell
 	// case of 0011 or 1100
     if(bitvalue[0] == bitvalue[1] && bitvalue[2] == bitvalue[3] && bitvalue[0] != bitvalue[2])
     {
+        // calculate position
         triangles[0].p[0] = interpolate_points(isovalue, c.p[v2], c.p[v1], c.value[v2], c.value[v1]);
         triangles[0].p[1] = interpolate_points(isovalue, c.p[v0], c.p[v2], c.value[v0], c.value[v2]);
         triangles[0].p[2] = interpolate_points(isovalue, c.p[v0], c.p[v3], c.value[v0], c.value[v3]);
@@ -106,11 +130,23 @@ generate_tetrahedron_triangles(triangle *triangles, unsigned char isovalue, cell
         triangles[1].p[0] = interpolate_points(isovalue, c.p[v3], c.p[v0], c.value[v3], c.value[v0]);
         triangles[1].p[1] = interpolate_points(isovalue, c.p[v1], c.p[v2], c.value[v1], c.value[v2]);
         triangles[1].p[2] = interpolate_points(isovalue, c.p[v1], c.p[v3], c.value[v1], c.value[v3]);
+        
+        // calculate normal
+        normal = v3_crossprod(v3_subtract(triangles[0].p[0],triangles[0].p[1]),
+							v3_subtract(triangles[0].p[0],triangles[0].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[0].n[0] = triangles[0].n[1] = triangles[0].n[2] = normal;
+        
+        normal = v3_crossprod(v3_subtract(triangles[1].p[0],triangles[1].p[1]),
+							v3_subtract(triangles[1].p[0],triangles[1].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[1].n[0] = triangles[1].n[1] = triangles[1].n[2] = normal;
         return 2;
     }
 	// case of 0101 or 1010
     if(bitvalue[0] == bitvalue[2] && bitvalue[1] == bitvalue[3] && bitvalue[0] != bitvalue[1])
     {
+        // calculate position
         triangles[0].p[0] = interpolate_points(isovalue, c.p[v0], c.p[v1], c.value[v0], c.value[v1]);
         triangles[0].p[1] = interpolate_points(isovalue, c.p[v1], c.p[v2], c.value[v1], c.value[v2]);
         triangles[0].p[2] = interpolate_points(isovalue, c.p[v0], c.p[v3], c.value[v0], c.value[v3]);
@@ -118,11 +154,23 @@ generate_tetrahedron_triangles(triangle *triangles, unsigned char isovalue, cell
         triangles[1].p[0] = interpolate_points(isovalue, c.p[v3], c.p[v0], c.value[v3], c.value[v0]);
         triangles[1].p[1] = interpolate_points(isovalue, c.p[v2], c.p[v1], c.value[v2], c.value[v1]);
         triangles[1].p[2] = interpolate_points(isovalue, c.p[v2], c.p[v3], c.value[v2], c.value[v3]);
+        
+        // calculate normal
+        normal = v3_crossprod(v3_subtract(triangles[0].p[0],triangles[0].p[1]),
+							v3_subtract(triangles[0].p[0],triangles[0].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[0].n[0] = triangles[0].n[1] = triangles[0].n[2] = normal;
+        
+        normal = v3_crossprod(v3_subtract(triangles[1].p[0],triangles[1].p[1]),
+							v3_subtract(triangles[1].p[0],triangles[1].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[1].n[0] = triangles[1].n[1] = triangles[1].n[2] = normal;
         return 2;
     }
 	// case of 1001 or 0110
     if(bitvalue[0] == bitvalue[3] && bitvalue[1] == bitvalue[2] && bitvalue[0] != bitvalue[1])
     {
+        // calculate position
         triangles[0].p[0] = interpolate_points(isovalue, c.p[v0], c.p[v1], c.value[v0], c.value[v1]);
         triangles[0].p[1] = interpolate_points(isovalue, c.p[v0], c.p[v2], c.value[v0], c.value[v2]);
         triangles[0].p[2] = interpolate_points(isovalue, c.p[v1], c.p[v3], c.value[v1], c.value[v3]);
@@ -130,6 +178,17 @@ generate_tetrahedron_triangles(triangle *triangles, unsigned char isovalue, cell
         triangles[1].p[0] = interpolate_points(isovalue, c.p[v2], c.p[v0], c.value[v2], c.value[v0]);
         triangles[1].p[1] = interpolate_points(isovalue, c.p[v3], c.p[v1], c.value[v3], c.value[v1]);
         triangles[1].p[2] = interpolate_points(isovalue, c.p[v3], c.p[v2], c.value[v3], c.value[v2]);
+        
+        // calculate normal
+        normal = v3_crossprod(v3_subtract(triangles[0].p[0],triangles[0].p[1]),
+							v3_subtract(triangles[0].p[0],triangles[0].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[0].n[0] = triangles[0].n[1] = triangles[0].n[2] = normal;
+        
+        normal = v3_crossprod(v3_subtract(triangles[1].p[0],triangles[1].p[1]),
+							v3_subtract(triangles[1].p[0],triangles[1].p[2]));
+		normal = v3_normalize(normal);	
+        triangles[1].n[0] = triangles[1].n[1] = triangles[1].n[2] = normal;
         return 2;
 	}
 	// Case of zero triangles (0000 or 1111) 
