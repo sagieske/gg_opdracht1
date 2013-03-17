@@ -39,6 +39,7 @@ get_cell(int i, int j, int k)
 {
     cell c;
 	// create indices for cell
+	int x = sizex, y = sizey, z = sizez;
     int is[8] = {0,1,0,1,0,1,0,1};
     int js[8] = {0,0,1,1,0,0,1,1};
     int ks[8] = {0,0,0,0,1,1,1,1};
@@ -48,7 +49,9 @@ get_cell(int i, int j, int k)
 		// add value
 		c.value[q] = volume[voxel2idx(i+is[q],j+js[q],k+ks[q])];
 		// create vector
-    	c.p[q] = v3_create(i+is[q],j+js[q],k+ks[q]);
+    	c.p[q] = v3_create(sizex * (i + is[q]), 
+    						sizey * (j + js[q]),
+    						sizez * (k + ks[q]));
 	}
 
     return c;

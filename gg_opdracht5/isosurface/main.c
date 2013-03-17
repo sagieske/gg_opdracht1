@@ -225,60 +225,30 @@ void DrawVolumeAsIsosurface(void)
 
 void FillArrayWithIsosurface(void)
 {
-	/*
-	int i, j, k;
-    int idx;
-    cell c;
-    triangle triangles[1000];//[MAX_VERTICES_IN_ARRAY];
 
-    //TODO: nu een segmentationfault na 8 voor k, wtf
-    for (k = 0; k < nz; k++)
-    {
-        for (j = 0; j < ny; j++)
-        {
-            for (i = 0; i < nx; i++)
-            {
-                printf("%d,%d,%d\n",i,j,k);
-                c = get_cell(i,j,k);
-                num_vertices_in_array += generate_cell_triangles(triangles,c,isovalue);
-            }
-        }
-    }*/
-        int i, j, k, tri = 0;
+    int i, j, k, tmp;
+    int num = 0;
+    triangle *triangles = malloc(6*2*sizeof(triangle));
+    cell c;
 	for (k = 0; k < nz; k++)
     {
         for (j = 0; j < ny; j++)
         {
             for (i = 0; i < nx; i++)
             {
-                cell c; 
-                int celltri, l;
-                triangle *triangles = malloc(6*2*sizeof(triangle));
                 c = get_cell(i, j, k);
-                if (k==-1 && j==5 && i==10)
-                	printf("\n(%.0f,%.0f,%.0f):(%.0f,%.0f,%.0f):\n(%.0f,%.0f,%.0f):(%.0f,%.0f,%.0f):\n(%.0f,%.0f,%.0f):(%.0f,%.0f,%.0f):\n(%.0f,%.0f,%.0f):(%.0f,%.0f,%.0f)\n",
-                	c.p[0].x,c.p[0].y,c.p[0].z,
-                	c.p[1].x,c.p[1].y,c.p[1].z,
-                	c.p[2].x,c.p[2].y,c.p[2].z,
-                	c.p[3].x,c.p[3].y,c.p[3].z,
-                	c.p[4].x,c.p[4].y,c.p[4].z,
-                	c.p[5].x,c.p[5].y,c.p[5].z,
-                	c.p[6].x,c.p[6].y,c.p[6].z,
-                	c.p[7].x,c.p[7].y,c.p[7].z);
-                // AddVertexToArray(vec3 v, vec3 n)
-                //generate_cell_triangles(triangle *triangles, cell c, unsigned char isovalue);
-                celltri = generate_cell_triangles(triangles, c, isovalue);
-                tri += celltri;
-                for(l = 0; l < celltri; l++)
+                tmp = generate_cell_triangles(triangles, c, isovalue);
+                for(int q=0; q < tmp; q++)
                 {
-                    AddVertexToArray(triangles[l].p[0], triangles[l].p[1]);
-                    AddVertexToArray(triangles[l].p[1], triangles[l].p[2]);
-                    AddVertexToArray(triangles[l].p[2], triangles[l].p[0]);
+                    AddVertexToArray(triangles[q].p[0], triangles[q].p[1]);
+                    AddVertexToArray(triangles[q].p[1], triangles[q].p[2]);
+                    AddVertexToArray(triangles[q].p[2], triangles[q].p[0]);
                 }
+                num += tmp;
             }
         }
     }
-    printf("%d triangles drawn.\n", tri);
+    printf("%d triangles drawn.\n", num);
 }
 
 void DrawScene(void)
