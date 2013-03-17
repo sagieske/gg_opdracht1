@@ -46,7 +46,7 @@ generate_tetrahedron_triangles(triangle *triangles, unsigned char isovalue, cell
 	
 
 	*/
-	printf("%d,%d,%d,%d\n",v0,v1,v2,v3);
+	//printf("%d,%d,%d,%d\n",v0,v1,v2,v3);
 	int bitvalue[4];
 	// TODO wat is v0?? de index? de waarde van de vertices?
 	// set bitvalues of vertices:
@@ -149,7 +149,7 @@ generate_cell_triangles(triangle *triangles, cell c, unsigned char isovalue)
     int v2[6] = {3,6,5,3,5,6};
     int v3[6] = {7,7,7,7,7,7};
     for (int i = 0; i < 6; i++) {
-		ans += generate_tetrahedron_triangles(triangles, isovalue, c, v0[i], v1[i], v2[i], v3[i]);
+		ans += generate_tetrahedron_triangles(&triangles[ans], isovalue, c, v0[i], v1[i], v2[i], v3[i]);
 	}
     return ans;	
 }
