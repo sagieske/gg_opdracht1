@@ -45,13 +45,9 @@ generate_tetrahedron_triangles(triangle *triangles, unsigned char isovalue, cell
 	Thetrahedon is an object consisting of 4 vertices, 6 edges that span 4 faces
 
 	*/
-<<<<<<< HEAD
-	//printf("%d,%d,%d,%d\n",v0,v1,v2,v3);
-=======
 
 	printf("%d,%d,%d,%d\n",v0,v1,v2,v3);
 
->>>>>>> d3f2eb8981ff2f67b365a4db933822b8e176bf59
 	int bitvalue[4];
 	// TODO wat is v0?? de index? de waarde van de vertices?
 	// set bitvalues of vertices:
@@ -148,15 +144,15 @@ int
 generate_cell_triangles(triangle *triangles, cell c, unsigned char isovalue)
 {
 
-    int triangles = 0;
+    int nr_triangles = 0;
 	// Indices for tertrahedron
 	int a[6] = {1, 2, 4, 1, 2, 4};
 	int b[6] = {3, 6, 5, 5, 3, 6};
 
 	// Loop through all 6 possible tetrahedron
 	for(int i = 0; i < 6; i++){
-		triangles += generate_tetrahedron_triangles(&triangles[tri], isovalue, c, 0, a[i], b[i], 7);
+		nr_triangles += generate_tetrahedron_triangles(&triangles[nr_triangles], isovalue, c, 0, a[i], b[i], 7);
 	}
 
-    return triangles;
+    return nr_triangles;
 }
