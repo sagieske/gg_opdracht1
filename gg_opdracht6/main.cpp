@@ -52,6 +52,7 @@ void load_world(unsigned int level)
     // (including the ball).
     //for (int i = 0; i < levels[level].num_polygons; i++)
 //    levels[level].start
+	printf("hello\n");
 	b2BodyDef test;
 	test.position.Set(1.0,1.0);
 	b2Body *ground = world.CreateBody(&test);
