@@ -58,7 +58,8 @@ void load_world(unsigned int level)
 	b2Body *ground = world.CreateBody(&test);
 	b2PolygonShape box;
 	box.SetAsBox(2.0,2.0);
-	ground->CreateFixture(&box, 0.0);
+//	ground->CreateFixture(&box, 0.0);
+	printf("%f %f\n",test.position.x,test.position.y);
 }
 
 
