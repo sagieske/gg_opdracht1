@@ -42,9 +42,22 @@ void load_world(unsigned int level)
         printf("Warning: level %d does not exist.\n", level);
         return;
     }
-
+	//const b2Vec2 *gravity = new b2Vec2(0.0f, -10.0f);
+	b2Vec2 gravity(0.0f, -10.0f);
+	//bool doSleep = true;
+	b2World world(gravity);//, doSleep);
+	//world.SetGravity(gravity);
+	//world.SetGravity(gravity);
     // Create a Box2D world and populate it with all bodies for this level
     // (including the ball).
+    //for (int i = 0; i < levels[level].num_polygons; i++)
+//    levels[level].start
+	b2BodyDef test;
+	test.position.Set(1.0,1.0);
+	b2Body *ground = world.CreateBody(&test);
+	b2PolygonShape box;
+	box.SetAsBox(2.0,2.0);
+	ground->CreateFixture(&box, 0.0);
 }
 
 
@@ -160,7 +173,7 @@ int main(int argc, char **argv)
 
     // Load the first level (i.e. create all Box2D stuff).
     load_world(0);
-
+	
     last_time = glutGet(GLUT_ELAPSED_TIME);
     frame_count = 0;
     glutMainLoop();
