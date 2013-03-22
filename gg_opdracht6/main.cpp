@@ -28,6 +28,9 @@ int frame_count;
 unsigned int num_levels;
 level_t *levels;
 
+b2Vec2 gravity(0.0f, -10.0f);
+b2World world(gravity);
+
 
 /*
  * Load a given world, i.e. read the world from the `levels' data structure and
@@ -42,24 +45,49 @@ void load_world(unsigned int level)
         printf("Warning: level %d does not exist.\n", level);
         return;
     }
-	//const b2Vec2 *gravity = new b2Vec2(0.0f, -10.0f);
-	b2Vec2 gravity(0.0f, -10.0f);
-	//bool doSleep = true;
-	b2World world(gravity);//, doSleep);
-	//world.SetGravity(gravity);
-	//world.SetGravity(gravity);
     // Create a Box2D world and populate it with all bodies for this level
     // (including the ball).
-    //for (int i = 0; i < levels[level].num_polygons; i++)
+//  for (int i = 0; i < levels[level].num_polygons; i++)
 //    levels[level].start
-	printf("hello\n");
-	b2BodyDef test;
-	test.position.Set(1.0,1.0);
-	b2Body *ground = world.CreateBody(&test);
-	b2PolygonShape box;
-	box.SetAsBox(2.0,2.0);
-//	ground->CreateFixture(&box, 0.0);
-	printf("%f %f\n",test.position.x,test.position.y);
+
+
+
+	b2BodyDef groundBodyDef;
+	groundBodyDef.type = b2_staticBody;
+	groundBodyDef.position.Set(4.0f,1.0f);
+	b2Body *ground = world.CreateBody(&groundBodyDef);
+	b2PolygonShape groundBox;
+	groundBox.SetAsBox(3.0,1.0);
+	b2FixtureDef fixtureGround;
+	fixtureGround.shape = &groundBox;
+	fixtureGround.density = 1.0f;
+	fixtureGround.friction = 0.3f;
+	ground->CreateFixture(&fixtureGround);
+
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(1.0f,4.0f);
+	b2Body *body = world.CreateBody(&bodyDef);
+	b2PolygonShape dynamicBox;
+	dynamicBox.SetAsBox(1.0f,1.0f);
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &dynamicBox;
+	fixtureDef.density = 1.0f;
+	fixtureDef.friction = 0.3f;
+	body->CreateFixture(&fixtureDef);
+	
+	b2BodyDef bodyDef1;
+	bodyDef1.type = b2_dynamicBody;
+	bodyDef1.position.Set(3.0f,4.0f);
+	b2Body *body1 = world.CreateBody(&bodyDef1);
+	b2PolygonShape dynamicBox1;
+	dynamicBox1.SetAsBox(1.0f,1.0f);
+	b2FixtureDef fixtureDef1;
+	fixtureDef1.shape = &dynamicBox1;
+	fixtureDef1.density = 1.0f;
+	fixtureDef1.friction = 0.3f;
+	body1->CreateFixture(&fixtureDef1);
+	
 }
 
 
@@ -81,7 +109,34 @@ void draw(void)
     //
     // Do any logic and drawing here.
     //
+    world.Step((frametime / 1000.f) / frame_count, 6, 2);
+	b2Body *objList = world.GetBodyList();
 
+	printf("bodies: %d\n",world.GetBodyCount());
+	for (int i=0; i<world.GetBodyCount(); i++) {
+		b2Vec2 position = objList->GetPosition();
+		float angle = objList->GetAngle();
+		b2Fixture *fix = objList->GetFixtureList();
+		b2Shape *shape = fix->GetShape();
+
+		if (shape->GetType() == 2)  {
+		
+			b2PolygonShape *poly = (b2PolygonShape *) shape;
+			int vertexCount = poly->GetVertexCount();
+			printf("poly:%d\n",vertexCount);
+			glBegin(GL_TRIANGLE_FAN);
+			glColor3f(1,1,1);
+			for (int v=0; v<vertexCount; v++) {
+				b2Vec2 vex = objList->GetWorldPoint(poly->GetVertex(v));
+				glVertex3f(vex.x, vex.y, 0.0f);
+			}
+			glEnd();
+			glDrawArrays(GL_TRIANGLE_FAN,0,vertexCount);
+
+		}
+		objList = objList->GetNext();
+	}
+		
 
     // Show rendered frame
     glutSwapBuffers();
@@ -175,7 +230,7 @@ int main(int argc, char **argv)
 
     // Load the first level (i.e. create all Box2D stuff).
     load_world(0);
-	
+    	
     last_time = glutGet(GLUT_ELAPSED_TIME);
     frame_count = 0;
     glutMainLoop();
